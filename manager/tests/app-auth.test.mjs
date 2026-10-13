@@ -369,7 +369,9 @@ test("anything but v=1 and v=2 is a version the page does not speak", () => {
 
 test("the platform must be an own key of the closed table", () => {
 	const names = [
-		"linux",
+		"Linux",
+		"LINUX",
+		"linux2",
 		"macos",
 		"android",
 		"ios",
@@ -685,7 +687,7 @@ test("a query string on the page address refuses the request, whatever the fragm
 		"#",
 		fragment({ v: "2" }),
 		fragment({ ts: String(TS - 3600) }),
-		fragment({ platform: "linux" }),
+		fragment({ platform: "macos" }),
 		fragment() + "&redirect_uri=x",
 		"#%",
 	]) {
@@ -798,7 +800,7 @@ test("MAX_CODE_LENGTH is the longest code whose answer always fits the 2,000-cha
 });
 
 test("the platform table is closed, frozen and holds one constant return base", () => {
-	assert.deepEqual(Object.keys(APP_PLATFORMS), ["windows"]);
+	assert.deepEqual(Object.keys(APP_PLATFORMS), ["windows", "linux"]);
 	assert.deepEqual(
 		{ ...APP_PLATFORMS.windows },
 		{
@@ -807,15 +809,28 @@ test("the platform table is closed, frozen and holds one constant return base", 
 		},
 		"a label and a return base, and no operating-system column",
 	);
+	assert.deepEqual(
+		{ ...APP_PLATFORMS.linux },
+		{
+			label: "URnetwork for Linux",
+			returnBase: "urnetwork://auth",
+		},
+		"a label and a return base, and no operating-system column",
+	);
 	assert.equal(Object.isFrozen(APP_PLATFORMS), true);
 	assert.equal(Object.isFrozen(APP_PLATFORMS.windows), true);
+	assert.equal(Object.isFrozen(APP_PLATFORMS.linux), true);
 	assert.throws(() => {
 		APP_PLATFORMS.windows.returnBase = "https://evil.example";
+	}, TypeError);
+	assert.throws(() => {
+		APP_PLATFORMS.linux.returnBase = "https://evil.example";
 	}, TypeError);
 	assert.throws(() => {
 		APP_PLATFORMS.macos = APP_PLATFORMS.windows;
 	}, TypeError);
 	assert.equal(platformRow("windows"), APP_PLATFORMS.windows);
+	assert.equal(platformRow("linux"), APP_PLATFORMS.linux);
 	for (const name of [
 		"",
 		" windows",
@@ -827,7 +842,10 @@ test("the platform table is closed, frozen and holds one constant return base", 
 		"hasOwnProperty",
 		"valueOf",
 		"windows\u0000",
-		"linux",
+		"Linux",
+		" linux",
+		"linux ",
+		"macos",
 	]) {
 		assert.equal(platformRow(name), null, JSON.stringify(name));
 	}
@@ -864,6 +882,18 @@ test("the answers are built from the table's constant and url-safe values only",
 	);
 	assert.equal(url.includes(CODE), false, "the code is nowhere in the clear");
 	assert.equal(url.includes(CODE.slice(0, 20)), false);
+
+	// the Linux app's answers go to the same address, from its own row
+	const linux = request({ platform: "linux" });
+	assert.ok(
+		buildApproveReturn(linux, sealCode(CODE, linux)).startsWith(
+			`urnetwork://auth?state=${STATE}&epk=`,
+		),
+	);
+	assert.equal(
+		buildDenyReturn(linux),
+		`urnetwork://auth?state=${STATE}&error=access_denied`,
+	);
 
 	// the browser reads it as exactly: scheme urnetwork, host auth, nothing else
 	for (const address of [url, buildDenyReturn(request())]) {
@@ -956,7 +986,7 @@ test("a forged platform or an oversized answer cannot build an address", () => {
 		"__proto__",
 		"constructor",
 		"toString",
-		"linux",
+		"macos",
 		"",
 		undefined,
 	]) {
@@ -1192,11 +1222,15 @@ test("the one console line names the action and the platform and carries nothing
 	try {
 		logAppAuthEvent("approve", "windows");
 		logAppAuthEvent("deny", "windows");
+		logAppAuthEvent("approve", "linux");
+		logAppAuthEvent("deny", "linux");
 	} finally {
 		console.warn = real;
 	}
 	assert.deepEqual(lines, [
 		["[AppAuth] action=approve platform=windows"],
 		["[AppAuth] action=deny platform=windows"],
+		["[AppAuth] action=approve platform=linux"],
+		["[AppAuth] action=deny platform=linux"],
 	]);
 });

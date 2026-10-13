@@ -455,7 +455,7 @@ test("nothing waiting: the dashboard comes up after 300 ms, as it did before", a
 test("a request that is stale or unreadable is dropped on the way, not followed", async () => {
 	for (const appRequest of [
 		request({ ts: TS - 3600 }),
-		request({ platform: "linux" }),
+		request({ platform: "macos" }),
 		"junk",
 	]) {
 		await withLayout(

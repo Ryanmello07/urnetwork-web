@@ -20,6 +20,7 @@ import {
 	fragment,
 	readFixture,
 	readRequestVectorV2,
+	readRequestVectorV2Linux,
 } from "./helpers/app-request.mjs";
 
 const vector = readFixture();
@@ -288,4 +289,74 @@ test("the version 2 request vector carries nothing but the documented fields", (
 		"state",
 		"ts",
 	]);
+});
+
+// ----- the same request from the Linux app: only its platform differs -----
+
+const linuxVector = readRequestVectorV2Linux();
+/** the Linux app's vector, written out here as well, so that a change to the fixture alone is noticed */
+const REQUEST_VECTOR_V2_LINUX =
+	"v=2&platform=linux&state=SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS&pk=WpSggvhoqoVW4XJvfjsB52dvVunYSQWrz6XiuMQVsCf&ts=1790000000&api=api.beta-test.net";
+
+test("the Linux version 2 request vector holds the documented fixed values: the Windows one's, with platform linux", () => {
+	assert.equal(linuxVector.contract, 2);
+	assert.equal(linuxVector.fragment, REQUEST_VECTOR_V2_LINUX);
+	assert.equal(linuxVector.fragment.length, 151);
+	assert.equal(linuxVector.fragmentLength, 151);
+	assert.equal(
+		linuxVector.fragment,
+		requestVector.fragment.replace(
+			"&platform=windows&",
+			"&platform=linux&",
+		),
+	);
+	assert.deepEqual(linuxVector.recipe, requestVector.recipe);
+	assert.deepEqual(linuxVector.keys, requestVector.keys);
+	assert.deepEqual(linuxVector.request, {
+		...requestVector.request,
+		platform: "linux",
+	});
+	assert.equal(linuxVector.request.pk, vector.appPk, "the same app key");
+	assert.deepEqual(
+		Object.keys(linuxVector).sort(),
+		Object.keys(requestVector).sort(),
+	);
+	assert.deepEqual(
+		Object.keys(linuxVector.request).sort(),
+		Object.keys(requestVector.request).sort(),
+	);
+});
+
+test("the Linux app's request is built exactly from those values and read back into exactly them, with the clock at ts", () => {
+	const { request, fragment: text } = linuxVector;
+	assert.equal(appRequestFragment(request), text);
+	assert.equal(
+		fragment(
+			{
+				v: "2",
+				platform: "linux",
+				state: request.state,
+				pk: request.pk,
+				ts: String(request.ts),
+				api: request.api,
+			},
+			{ hash: false },
+		),
+		text,
+	);
+	assert.deepEqual(
+		text.split("&").map((field) => field.split("=")[0]),
+		linuxVector.keys,
+	);
+	const clock = request.ts * 1000;
+	for (const written of [text, `#${text}`]) {
+		assert.deepEqual(parseAppRequest(written, clock), {
+			ok: true,
+			request,
+		});
+	}
+	assert.deepEqual(parseAppRequest(text, clock + 241_000), {
+		ok: false,
+		reason: "stale",
+	});
 });

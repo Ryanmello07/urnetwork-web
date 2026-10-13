@@ -23,13 +23,14 @@ on it), is needed before Node 22.18, and does nothing after.
 
 ## Approving a native app (`/login-app`)
 
-A native app (today: URnetwork for Windows) can ask a person who is signed in
-here to approve its sign-in. The app opens `https://manager.bringyour.com/login-app`
-in the person's browser. The page shows which network would be signed in, the
-person approves or cancels, and the page answers by navigating to a fixed
-custom-scheme address (`urnetwork://auth?...`) that the system hands to the
-app. The credential travels inside a NaCl box that only the app can open, and
-the app redeems it with the existing `POST /auth/code-login`. No server changes.
+A native app (today: URnetwork for Windows and URnetwork for Linux) can ask a
+person who is signed in here to approve its sign-in. The app opens
+`https://manager.bringyour.com/login-app` in the person's browser. The page
+shows which network would be signed in, the person approves or cancels, and the
+page answers by navigating to a fixed custom-scheme address
+(`urnetwork://auth?...`) that the system hands to the app. The credential
+travels inside a NaCl box that only the app can open, and the app redeems it
+with the existing `POST /auth/code-login`. No server changes.
 
 This is **not** the browser-extension flow. `/login-extension`
 (`LoginExtension.tsx`, `extensionAuth.ts`) is a separate contract that published
@@ -246,10 +247,11 @@ The auth code comes from `POST /auth/code-create` with `duration_minutes: 2`
 and `uses: 1`, made with the person's own session. It lives only in memory of
 the click handler: never in storage, the DOM, the page's address, the console or
 a log. The one console line the page writes is
-`[AppAuth] action=approve|deny platform=windows`. The reply to that request is
-read by a parser of its own (`createAuthCode` in `src/services/api.ts`): a reply
-that is not JSON, or does not parse, is reported with one of two fixed messages,
-never with a piece of the body, in the returned error or in the console.
+`[AppAuth] action=approve|deny platform=windows|linux`. The reply to that
+request is read by a parser of its own (`createAuthCode` in
+`src/services/api.ts`): a reply that is not JSON, or does not parse, is reported
+with one of two fixed messages, never with a piece of the body, in the returned
+error or in the console.
 
 Before it mints anything, the page seals a throwaway code as long as the budget
 allows and builds the whole address from it, so a code is never minted for an
@@ -281,6 +283,7 @@ Two more things can stop that dry run, and neither is a hiccup to try again:
 | `platform` | Label | Answer goes to |
 | ---------- | ----- | -------------- |
 | `windows`  | URnetwork for Windows | `urnetwork://auth` |
+| `linux`    | URnetwork for Linux | `urnetwork://auth` |
 
 The table is closed (`APP_PLATFORMS`, frozen). The label and the address come
 from it, never from the request. A row is added only when that app enforces the
@@ -403,7 +406,7 @@ that).
 `public/approval-contract.json` is served as `/approval-contract.json`:
 
 ```json
-{"contracts":[1,2],"platforms":["windows"]}
+{"contracts":[1,2],"platforms":["windows","linux"]}
 ```
 
 It lists the contract versions this page serves (`APP_CONTRACTS`) and the keys
@@ -440,8 +443,8 @@ to 177), the plaintext, the sealed `epk`, `n` and `d` (1,036 characters) and the
 whole answer address. The page's `sealCode` must reproduce it byte for byte
 (`tests/app-auth-vector.test.mjs`), and the SDK's Go
 `GenerateSharedSecret`/`DecryptData` must open it (checked, in both directions,
-against verbatim copies of those functions). The Windows app is expected to pin
-the same file in its own tests.
+against verbatim copies of those functions). The Windows and Linux apps are
+expected to pin the same file in their own tests.
 
 `tests/fixtures/app-request-vector-v2.json` is the shared vector for the version 2
 request: the app builds, from state = 43 `S`, the public key of the same app
@@ -454,7 +457,17 @@ v=2&platform=windows&state=SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS&pk=WpSggv
 
 (153 characters, the keys in this order) after the page address and the `#`, and
 the page parses it, with its clock at `ts`, into those values and nothing else
-(`tests/app-auth-vector.test.mjs`). The Windows app commits the same string.
+(`tests/app-auth-vector.test.mjs`).
+`tests/fixtures/app-request-vector-v2-linux.json` is the same request from the
+Linux app, which differs only in `platform`:
+
+```
+v=2&platform=linux&state=SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS&pk=WpSggvhoqoVW4XJvfjsB52dvVunYSQWrz6XiuMQVsCf&ts=1790000000&api=api.beta-test.net
+```
+
+(151 characters, the keys in this order), which the same tests build and parse.
+The Windows and Linux apps commit the same strings, each the one with its
+platform.
 
 ### Reserved: the check code (not displayed in v1)
 
@@ -468,7 +481,7 @@ the test vector is SHA-256 of `abc`, which gives `XJ4BNP`.
 `npm test` runs `tests/app-auth.test.mjs` (parser, table, addresses, sealing),
 `app-auth-api.test.mjs` (version 2: the grammar of `api`, every case of the
 contract's conformance list by name, and the helpers that say which server a
-request is for), `app-auth-vector.test.mjs` (both shared vectors),
+request is for), `app-auth-vector.test.mjs` (the shared vectors),
 `app-approval.test.mjs` (the controller),
 `app-request-stash.test.mjs`, `app-route.test.mjs` (return after sign-in) and
 `app-layout.test.mjs` (the effect in `Layout.tsx` that does it, run with a fake

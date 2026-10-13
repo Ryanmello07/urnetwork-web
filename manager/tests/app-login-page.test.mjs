@@ -570,7 +570,7 @@ test("a request that is not valid sends nobody to sign in and offers nothing", a
 		requestHash({ v: "2" }),
 		requestHash({ ts: "1000000000" }),
 		`${requestHash()}&redirect_uri=x`,
-		requestHash({ platform: "linux" }),
+		requestHash({ platform: "macos" }),
 	]) {
 		await withPage({ token: null, hash }, async (page) => {
 			await page.flush();

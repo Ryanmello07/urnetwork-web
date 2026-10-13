@@ -292,7 +292,7 @@ test("a malformed slot is dropped, not followed", () => {
 		"junk",
 		"null",
 		"[]",
-		slot({ platform: "linux" }),
+		slot({ platform: "macos" }),
 		slot({ state: "short" }),
 		slot({ pk: "1".repeat(44) }),
 		slot({ ts: String(TS) }),

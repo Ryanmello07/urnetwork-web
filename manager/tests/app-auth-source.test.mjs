@@ -645,10 +645,25 @@ test("the contract builds answers from the table and the two forms only", () => 
 			`${file} holds no address`,
 		);
 	}
+	// one return base, written once for each row and nowhere but in the table
+	const table = contract.match(
+		/export const APP_PLATFORMS = Object\.freeze\(\{\n[\s\S]*?\n\}\);\n/,
+	);
+	assert.ok(table, "the table is where it was");
 	assert.equal(
-		code("src/services/appAuth.ts").split("urnetwork://auth").length - 1,
-		1,
-		"one return base, in the table",
+		contract.split("urnetwork://auth").length - 1,
+		Object.keys(APP_PLATFORMS).length,
+		"one return base for each row",
+	);
+	assert.equal(
+		table[0].split('returnBase: "urnetwork://auth",').length - 1,
+		Object.keys(APP_PLATFORMS).length,
+		"each in its row of the table",
+	);
+	assert.deepEqual(
+		[...new Set(Object.values(APP_PLATFORMS).map((row) => row.returnBase))],
+		["urnetwork://auth"],
+		"one return base",
 	);
 });
 
@@ -837,12 +852,15 @@ test("the nginx template is as it was: this page has no block of its own", () =>
 
 test("the descriptor lists the contract versions and the platforms of the table, and nothing else", () => {
 	const text = source("public/approval-contract.json");
-	assert.equal(text, '{"contracts":[1,2],"platforms":["windows"]}\n');
+	assert.equal(text, '{"contracts":[1,2],"platforms":["windows","linux"]}\n');
 	const descriptor = JSON.parse(text);
 	assert.deepEqual(Object.keys(descriptor), ["contracts", "platforms"]);
 	assert.deepEqual(descriptor.contracts, [...APP_CONTRACTS]);
 	assert.deepEqual(descriptor.platforms, Object.keys(APP_PLATFORMS));
-	assert.deepEqual(descriptor, { contracts: [1, 2], platforms: ["windows"] });
+	assert.deepEqual(descriptor, {
+		contracts: [1, 2],
+		platforms: ["windows", "linux"],
+	});
 	// the versions it lists are the versions the parser reads, and no other
 	assert.match(
 		code("src/services/appAuth.ts"),
@@ -986,7 +1004,9 @@ test("README documents the contract and says the extension is a separate, frozen
 		"SHA-256",
 		"XJ4BNP",
 		"public/approval-contract.json",
-		'{"contracts":[1,2],"platforms":["windows"]}',
+		'{"contracts":[1,2],"platforms":["windows","linux"]}',
+		"| `linux`    | URnetwork for Linux | `urnetwork://auth` |",
+		"`[AppAuth] action=approve|deny platform=windows|linux`",
 		"tests/fixtures/app-auth-vector.json",
 		// version 2: the request that names its network, its grammar, its card and its timeouts
 		"### A request that names its network (version 2)",
@@ -1002,6 +1022,8 @@ test("README documents the contract and says the extension is a separate, frozen
 		"`SEAL_TIMEOUT_MS`",
 		"tests/fixtures/app-request-vector-v2.json",
 		"v=2&platform=windows&state=SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS&pk=WpSggvhoqoVW4XJvfjsB52dvVunYSQWrz6XiuMQVsCf&ts=1790000000&api=api.beta-test.net",
+		"tests/fixtures/app-request-vector-v2-linux.json",
+		"v=2&platform=linux&state=SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS&pk=WpSggvhoqoVW4XJvfjsB52dvVunYSQWrz6XiuMQVsCf&ts=1790000000&api=api.beta-test.net",
 		"npm test",
 		"Navigation Timing",
 		"no approval control is interactive",
@@ -1045,6 +1067,8 @@ test("README documents the contract and says the extension is a separate, frozen
 		"the last label is neither all digits nor `0x` and hex digits",
 		"calls its request back at once",
 		"sends its copy of the session to a server it was not issued by",
+		"A native app (today: URnetwork for Windows and URnetwork for Linux)",
+		"(151 characters, the keys in this order)",
 	]) {
 		assert.ok(flatReadme.includes(fact), `README says: ${fact}`);
 	}
@@ -1155,10 +1179,10 @@ test("no operating-system check remains: not in the table, not in the page, not 
 			file,
 		);
 	}
-	assert.deepEqual(Object.keys(APP_PLATFORMS.windows), [
-		"label",
-		"returnBase",
-	]);
+	assert.deepEqual(Object.keys(APP_PLATFORMS), ["windows", "linux"]);
+	for (const [name, row] of Object.entries(APP_PLATFORMS)) {
+		assert.deepEqual(Object.keys(row), ["label", "returnBase"], name);
+	}
 	assert.doesNotMatch(
 		source("README.md"),
 		/Browser OS|browser-OS|on your PC|PC where|userAgent/i,

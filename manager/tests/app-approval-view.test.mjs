@@ -4,6 +4,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { platformRow } from "../src/services/appAuth.ts";
 import { deriveApprovalModel } from "../src/services/appApprovalView.ts";
 import { API, mulberry32, request } from "./helpers/app-request.mjs";
 
@@ -51,6 +52,54 @@ test("with every check passed the card is the consent card, named from the table
 		assert.equal(model.problem, problem);
 		assert.equal(model.armed, true, `${problem} invites another try`);
 	}
+});
+
+test("a Linux request with every check passed is the consent card, named URnetwork for Linux, and so is its server card", () => {
+	const linux = { kind: "ready", request: request({ platform: "linux" }) };
+	assert.deepEqual(deriveApprovalModel(base({ status: linux })), {
+		kind: "consent",
+		label: "URnetwork for Linux",
+		networkName: "alpha",
+		server: null,
+		armed: true,
+		busy: false,
+		minting: false,
+		problem: null,
+	});
+	assert.deepEqual(
+		deriveApprovalModel(base({ status: linux, serverMatches: false })),
+		{
+			kind: "server",
+			label: "URnetwork for Linux",
+			apiHost: "api.example.test",
+			requestedHost: null,
+			armed: true,
+		},
+	);
+	const named = {
+		kind: "ready",
+		request: request({ platform: "linux", api: API }),
+	};
+	assert.deepEqual(deriveApprovalModel(base({ status: named })), {
+		kind: "consent",
+		label: "URnetwork for Linux",
+		networkName: "alpha",
+		server: "api.example.test",
+		armed: true,
+		busy: false,
+		minting: false,
+		problem: null,
+	});
+	assert.deepEqual(
+		deriveApprovalModel(base({ status: named, serverMatches: false })),
+		{
+			kind: "server",
+			label: "URnetwork for Linux",
+			apiHost: "api.example.test",
+			requestedHost: API,
+			armed: true,
+		},
+	);
 });
 
 test("after a broken answer the card says so and Approve stays off: the page has to be reloaded", () => {
@@ -264,7 +313,7 @@ test("what comes before the server still comes first: the end states, the gates,
 				serverMatches: false,
 				status: {
 					kind: "ready",
-					request: request({ platform: "linux", api: API }),
+					request: request({ platform: "macos", api: API }),
 				},
 			}),
 		),
@@ -325,7 +374,7 @@ test("a request whose platform is not in the table cannot reach the consent card
 	for (const platform of [
 		"__proto__",
 		"constructor",
-		"linux",
+		"macos",
 		"",
 		undefined,
 	]) {
@@ -344,6 +393,7 @@ test("property: the consent card appears only when every check has passed", () =
 	const rand = mulberry32(99);
 	const pick = (list) => list[Math.floor(rand() * list.length)];
 	let consents = 0;
+	let linuxConsents = 0;
 	for (let i = 0; i < 30000; i++) {
 		const inputs = {
 			gate: pick(["ok", "ok", "ok", "ok", "framed", "opener"]),
@@ -354,6 +404,7 @@ test("property: the consent card appears only when every check has passed", () =
 				{ kind: "invalid" },
 				{ kind: "stale" },
 				{ kind: "unsupported" },
+				{ kind: "ready", request: request({ platform: "macos" }) },
 				{ kind: "ready", request: request({ platform: "linux" }) },
 				{ kind: "ready", request: request({ api: API }) },
 				{ kind: "ready", request: request({ api: API }) },
@@ -392,9 +443,14 @@ test("property: the consent card appears only when every check has passed", () =
 		const model = deriveApprovalModel(inputs);
 		if (model.kind !== "consent") continue;
 		consents++;
+		if (inputs.status.request.platform === "linux") linuxConsents++;
 		assert.equal(inputs.gate, "ok");
 		assert.equal(inputs.status.kind, "ready");
-		assert.equal(inputs.status.request.platform, "windows");
+		assert.ok(platformRow(inputs.status.request.platform) !== null);
+		assert.equal(
+			model.label,
+			platformRow(inputs.status.request.platform).label,
+		);
 		assert.equal(inputs.authenticated, true);
 		assert.equal(inputs.serverMatches, true);
 		assert.equal(inputs.done, null);
@@ -410,5 +466,9 @@ test("property: the consent card appears only when every check has passed", () =
 	assert.ok(
 		consents > 100,
 		`the generator reaches the consent card (${consents} times)`,
+	);
+	assert.ok(
+		linuxConsents > 10,
+		`and reaches it for a Linux request (${linuxConsents} times)`,
 	);
 });

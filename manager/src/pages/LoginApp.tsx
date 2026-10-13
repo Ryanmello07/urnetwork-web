@@ -38,10 +38,11 @@ import {
 import { readSession, serverMark } from "../services/sessionBinding";
 import { AppApprovalView } from "../components/AppApprovalView";
 
-// A native app (today: URnetwork for Windows) asks the signed-in person to
-// approve its sign-in. The contract, the checks and the one navigation this
-// page makes are described in README.md ("Approving a native app"); this file
-// is the thin shell around services/appAuth, appApproval and appRequestStash.
+// A native app (today: URnetwork for Windows and URnetwork for Linux) asks the
+// signed-in person to approve its sign-in. The contract, the checks and the one
+// navigation this page makes are described in README.md ("Approving a native
+// app"); this file is the thin shell around services/appAuth, appApproval and
+// appRequestStash.
 // It is not the browser-extension flow: /login-extension is a separate,
 // frozen contract and shares nothing with this page.
 

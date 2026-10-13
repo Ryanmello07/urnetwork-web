@@ -468,6 +468,16 @@ const ACCEPTED = [
 		fragment({}, { hash: false }),
 		request(),
 	],
+	[
+		"version 1, platform linux",
+		fragment({ platform: "linux" }),
+		request({ platform: "linux" }),
+	],
+	[
+		"version 2, platform linux",
+		V2({ platform: "linux" }),
+		request({ platform: "linux", api: API }),
+	],
 ];
 for (const [name, text, expected] of ACCEPTED) {
 	test(`section 9 accepts: ${name}`, () => {
@@ -775,7 +785,8 @@ reject(
 // platform
 for (const version of [1, 2]) {
 	for (const platform of [
-		"linux",
+		"macos",
+		"Linux",
 		"__proto__",
 		"constructor",
 		"toString",
@@ -970,7 +981,7 @@ test("a bad api is its own reason, and the reason is in the closed list", () => 
 test("a version 2 request is refused whole when anything but api is wrong, and api is judged after the shapes of the other values", () => {
 	// a bad platform, state or key hides a bad api: the first problem in the contract's order is the answer
 	assert.equal(
-		reasonOf(V2({ platform: "linux", api: "localhost" })),
+		reasonOf(V2({ platform: "macos", api: "localhost" })),
 		"platform",
 	);
 	assert.equal(reasonOf(V2({ state: "short", api: "localhost" })), "state");

@@ -83,6 +83,19 @@ export function readRequestVectorV2() {
 	);
 }
 
+/** the same request from the Linux app (tests/fixtures/app-request-vector-v2-linux.json) */
+export function readRequestVectorV2Linux() {
+	return JSON.parse(
+		fs.readFileSync(
+			new URL(
+				"../fixtures/app-request-vector-v2-linux.json",
+				import.meta.url,
+			),
+			"utf8",
+		),
+	);
+}
+
 /** the source of a repo file with the line endings of the checkout removed */
 export function source(relativeToManager) {
 	return fs

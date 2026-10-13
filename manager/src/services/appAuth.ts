@@ -42,6 +42,10 @@ export const APP_PLATFORMS = Object.freeze({
 		label: "URnetwork for Windows",
 		returnBase: "urnetwork://auth",
 	}),
+	linux: Object.freeze({
+		label: "URnetwork for Linux",
+		returnBase: "urnetwork://auth",
+	}),
 });
 export type AppPlatform = keyof typeof APP_PLATFORMS;
 
