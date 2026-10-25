@@ -14,11 +14,12 @@ import {
 
 const TRANSLATED = ['/', '/operators', '/miners', '/validators', '/research'];
 // English-only by design: the legal documents (a translated contract would be
-// a different contract), the docs, and the about / build / investor / reserve /
-// mainnet pages.
+// a different contract), the docs, the about / build / investor / reserve /
+// mainnet pages, and the research reports under the translated research page.
 const ENGLISH_ONLY = [
     '/terms', '/privacy', '/vdp',
     '/about', '/build', '/reserve', '/mainnet', '/docs', '/docs/litepaper', '/investors', '/investors/deck', '/investors/letter-to-tokenholders-september-2026',
+    '/research/2026-q3-report',
     '/audits/report.pdf', '/future-page',
 ];
 

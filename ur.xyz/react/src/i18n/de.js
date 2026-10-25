@@ -240,6 +240,14 @@ operators: {
         metaTitle: 'Forschung: Offene Algorithmen, Daten und Audits — UR',
         metaDescription: 'Offene UR-Forschung: Routing-, Zuordnungs-, Übertragungs- und Belohnungsalgorithmen mit Quellcode und anonymen Daten, der Apex-SN1-Wettbewerb und Audits.',
         intro:   'Das Protokoll ist ein dezentral-natives Multi-IP-, Multi-Transport-System, das auf Millionen von Minern pro Netzbetreiber skalieren soll. Jeder Algorithmenbereich unten ist mit seinem Quellcode und, wo zutreffend, mit anonymisierten Datensätzen für unabhängige Analyse veröffentlicht.',
+        // the card for the research report (an English page, so the link says so)
+        report: {
+            tag: 'Bericht',
+            date: '24. August bis 24. Oktober 2026',
+            title: 'Forschungsbericht August–Oktober 2026',
+            body: 'Die Forschung soll allen die beste Verschlüsselung und die beste Geschwindigkeit für den Alltag bieten, die dein Internet besser machen. Der Bericht zeigt auf einer Zeitleiste 39 gemessene Änderungen auf diesem Weg, wie weit jede Art von Verbesserung gekommen ist und wie die Forschung durchgeführt wurde.',
+            cta: 'Bericht lesen (auf Englisch)'
+        },
         areaLabels: {
             approach: 'Aktueller Ansatz',
             implementation: 'Implementierung',

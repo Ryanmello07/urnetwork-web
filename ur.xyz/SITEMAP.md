@@ -9,6 +9,10 @@ This section should include a clean and minimal formatting of the statement of f
 
 This should include the reasearch summary from RESEARCH.md.
 
+## Research reports
+
+The August–October 2026 research report at /research/2026-q3-report, English-only like /mainnet, linked from a card under the /research intro in every language. It reads intro, timeline, methods, milestones, details. The intro grounds the research in its aim (the best encryption and the best speed for everyone, in everyday use, that makes your internet better), what each meter means in everyday use, the headline figures (multiples) and every entry at a glance. The timeline lays out the 39 entries of connect/20261024-RESEARCH-IMPACT.md, each with a plain headline, one key figure and a marker for its kind, and the report's own text a click away; meters (page load, bulk speed, packet path, memory, recoveries) replay the evidence as the reader goes and are never combined into one score. Then the seven methods (each with an animation), the gigabit-class milestone from adaptive windows, and the details: how far each kind of gain went, the instruments, what is still open, and a glossary. On wide screens a sidebar lists the sections and the meters sit in the other margin beside the timeline; on tablets and phones a bar docks under the nav with a menu of the sections and, in the timeline, the meters. The content is data, in react/src/data/research-report-2026-q3.json: scripts/research-report-import.mjs refreshes the figures quoted from the report and keeps the plain layer, and tests/research-report.test.mjs checks that every figure shown is the report's.
+
 # 3. Providers
 
 # 4. Extenders

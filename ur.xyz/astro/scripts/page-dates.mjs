@@ -232,6 +232,9 @@ function sourcesFor(urlPath) {
     if (name === 'mainnet') {
         return ['react/src/components/pages/Mainnet.jsx', 'react/src/components/pages/mainnet/timeline.js', 'react/src/data/mainnet-timeline.json', 'react/src/data/mainnet.js', 'astro/src/pages/mainnet.astro'];
     }
+    if (name.startsWith('research/')) {
+        return ['react/src/components/pages/ResearchReport.jsx', 'react/src/components/pages/research-report/model.js', `react/src/data/research-report-${name.slice('research/'.length).replace(/-report$/, '')}.json`, `astro/src/pages/${name}.astro`];
+    }
     if (name === 'docs') return ['react/src/components/DocsExplorer.jsx', ...docFiles().values()];
     if (name.startsWith('docs/')) {
         const file = docFiles().get(name.slice('docs/'.length));

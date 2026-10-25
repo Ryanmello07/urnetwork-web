@@ -238,6 +238,14 @@ operators: {
         metaTitle: '研究：开放的算法、数据与审计 — UR',
         metaDescription: '公开的 UR 研究：路由、匹配、传输与奖励算法及其源代码和匿名数据，Apex SN1 延迟竞赛，以及审计。',
         intro:   '协议是一个去中心化原生、多 IP、多传输的系统，旨在扩展到每个网络运营商数百万矿工的规模。下面的每个算法领域都发布了其源代码，以及（如适用）用于独立分析的匿名数据集。',
+        // the card for the research report (an English page, so the link says so)
+        report: {
+            tag: '报告',
+            date: '2026年8月24日至10月24日',
+            title: '2026年8月至10月研究报告',
+            body: '这项研究的目标是让每个人在日常使用中都获得最好的加密和最快的速度，让你的互联网变得更好。报告在一条时间线上展示了朝这一目标迈进的39项经过测量的改动、每类改进各自走了多远，以及研究是如何进行的。',
+            cta: '阅读报告（英文）'
+        },
         areaLabels: {
             approach: '当前方案',
             implementation: '实现',

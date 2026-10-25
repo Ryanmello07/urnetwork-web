@@ -10,7 +10,7 @@ import MinerSim from '@react/components/MinerSim.jsx';
 import MinerGlobeIntro from '@react/components/MinerGlobeIntro.jsx';
 import ValidatorSim from '@react/components/ValidatorSim.jsx';
 import OperatorsDirectoryIsland from '../../islands/OperatorsDirectoryIsland.jsx';
-import { ResearchCompetition, ResearchAreas, ResearchNotes, ResearchFoot, competitionPhase } from '@react/components/ResearchExtras.jsx';
+import { ResearchCompetition, ResearchReportCard, ResearchAreas, ResearchNotes, ResearchFoot, competitionPhase } from '@react/components/ResearchExtras.jsx';
 import { RESEARCH_DEEP_LINK_SCRIPT, researchCollectionJsonLd } from '@react/components/research-areas.js';
 import en from '@react/i18n/en.js';
 import { sentenceClamp } from '../../lib/meta.js';
@@ -62,6 +62,7 @@ const jsonLd = section === 'research'
                 {section === 'research' && <ResearchCompetition client:load copy={t.research.competition} initialPhase={competitionPhase(Date.now())} />}
                 {section === 'miners' && <MinerGlobeIntro client:load alt={sectionData.globeAlt} labels={sectionData.globeLabels} />}
                 <p>{sectionData.intro}</p>
+                {section === 'research' && <ResearchReportCard t={t} />}
                 {section === 'miners' && <p>{sectionData.both}</p>}
                 {section === 'miners' && <p>{sectionData.goal}</p>}
                 {showDiagram && <NetworkDiagram client:visible={{rootMargin: "200px"}} active={section} lang={lang} ctaLabel={sectionData.cta} copy={diagramCopy(t)} />}

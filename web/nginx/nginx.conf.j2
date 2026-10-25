@@ -434,6 +434,13 @@ http {
             return 301 /$en_page$en_rest$is_args$args;
         }
 
+        # The research reports are English-only pages under the translated
+        # research section: /<lang>/research/<report> 301s to the English
+        # report in one hop (/<lang>/research itself is a translated page).
+        location ~ ^/(?:ru|ar|zh|de|es)/research/(?<en_report>[^/]+?)(?:\.html|/)?$ {
+            return 301 /research/$en_report$is_args$args;
+        }
+
         # The investor documents' PDFs are printouts of HTML pages. They stay
         # downloads, and point search engines at the page they print.
         location = /investors/ur-investor-deck.pdf {

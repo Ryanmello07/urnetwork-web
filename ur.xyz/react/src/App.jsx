@@ -24,6 +24,7 @@ import InvestorsPage from './components/pages/Investors';
 import BuildPage from './components/pages/Build';
 import ReservePage from './components/pages/Reserve';
 import MainnetPage from './components/pages/Mainnet';
+import ResearchReportPage from './components/pages/ResearchReport';
 import { useRoute } from './router';
 
 const Terms = () => <LegalSection doc="terms" />;
@@ -47,6 +48,8 @@ const SECTION_COMPONENTS = {
     build:      BuildPage,
     reserve:    ReservePage,
     mainnet:    MainnetPage,
+    // a research report, /research/<slug> (router RESEARCH_REPORT_SLUGS)
+    'research-report': ResearchReportPage,
 };
 
 /**

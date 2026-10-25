@@ -265,6 +265,14 @@ operators: {
         metaTitle: 'Research: Open algorithms, data and audits — UR',
         metaDescription: 'UR research in the open: routing, matching, transfer and reward algorithms with source and anonymized data, the Apex SN1 latency competition, and audits.',
         intro:   'The protocol is a decentralized-native, multi-IP, multi-transport system designed to scale to millions of miners per network operator. Each algorithm area below is published with its source and, where applicable, anonymized data sets for independent analysis.',
+        // the card for the research report (an English page), under the intro
+        report: {
+            tag: 'Report',
+            date: 'August 24 – October 24, 2026',
+            title: 'August–October 2026 Research Report',
+            body: 'The research aims to give everyone the best encryption and the best speed, for everyday use, that makes your internet better. The report follows 39 measured changes toward that on one timeline, how far each kind of gain went, and how the research was done.',
+            cta: 'Read the report'
+        },
         // the algorithm areas: each renders as an expandable block (closed: tag,
         // title, body; open: approach, links, directions). The anchor ids are in
         // components/research-areas.js, keyed by tag.
