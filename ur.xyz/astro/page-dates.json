@@ -22,8 +22,8 @@
       "lastmod": "2026-10-14"
     },
     "/ar/research": {
-      "fingerprint": "97b1adf1cbc786aa",
-      "lastmod": "2026-10-14"
+      "fingerprint": "19cc46b1bb9c197c",
+      "lastmod": "2026-10-25"
     },
     "/ar/validators": {
       "fingerprint": "307cc71152692456",
@@ -50,8 +50,8 @@
       "lastmod": "2026-10-14"
     },
     "/de/research": {
-      "fingerprint": "f8e0e613a3aa7d60",
-      "lastmod": "2026-10-14"
+      "fingerprint": "75d0e397731950ee",
+      "lastmod": "2026-10-25"
     },
     "/de/validators": {
       "fingerprint": "7affbf410116fb54",
@@ -118,8 +118,8 @@
       "lastmod": "2026-10-14"
     },
     "/es/research": {
-      "fingerprint": "eb39d8edbb9c34af",
-      "lastmod": "2026-10-14"
+      "fingerprint": "242c2facf73e75ca",
+      "lastmod": "2026-10-25"
     },
     "/es/validators": {
       "fingerprint": "b19a149314e5bbd7",
@@ -170,8 +170,12 @@
       "lastmod": "2026-09-25"
     },
     "/research": {
-      "fingerprint": "d59389200fdabc1a",
-      "lastmod": "2026-10-14"
+      "fingerprint": "53ca994d2ed99232",
+      "lastmod": "2026-10-25"
+    },
+    "/research/2026-q3-report": {
+      "fingerprint": "356a081b4fb0b8d7",
+      "lastmod": "2026-10-25"
     },
     "/reserve": {
       "fingerprint": "2169c502532f3e07",
@@ -190,8 +194,8 @@
       "lastmod": "2026-10-14"
     },
     "/ru/research": {
-      "fingerprint": "9387450a2b24a1f8",
-      "lastmod": "2026-10-14"
+      "fingerprint": "9832108c525aecc5",
+      "lastmod": "2026-10-25"
     },
     "/ru/validators": {
       "fingerprint": "27a02f30eaf105ca",
@@ -222,8 +226,8 @@
       "lastmod": "2026-10-14"
     },
     "/zh/research": {
-      "fingerprint": "72a9fb9ad37ee9ea",
-      "lastmod": "2026-10-14"
+      "fingerprint": "225a3cc21c88e7f9",
+      "lastmod": "2026-10-25"
     },
     "/zh/validators": {
       "fingerprint": "beb18ab2dde5e282",

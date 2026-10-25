@@ -1,0 +1,2013 @@
+{
+  "about": "The August–October 2026 research report page (/research/2026-q3-report). Every figure in an entry's change, measured and suites fields, and in methods, end.report and instruments, is quoted verbatim from the research impact report in urnetwork/connect (20261024-RESEARCH-IMPACT.md); refresh them with scripts/research-report-import.mjs, which keeps everything else. The plain-language layer (titles, stats, meanings, meters) is edited here. Figures are never rounded, and a ratio or percentage appears only where the report states it.",
+  "slug": "2026-q3-report",
+  "title": "August–October 2026 Research Report",
+  "published": "2026-10-24",
+  "period": {
+    "start": "2026-08-24",
+    "end": "2026-10-24"
+  },
+  "source": {
+    "label": "Network performance research impact, 2026-08-24 to 2026-10-24",
+    "href": "https://github.com/urnetwork/connect/blob/main/20261024-RESEARCH-IMPACT.md"
+  },
+  "entries": [
+    {
+      "date": "Aug 24",
+      "iso": "2026-08-24",
+      "kind": "gain",
+      "title": "Rebalance mobile memory and speed settings together",
+      "stat": {
+        "v": "3,967.8 → 745.0 ms",
+        "l": "median Wikipedia load on the low-bar phone test"
+      },
+      "more": "Document first byte 1,575.2 → 248.1 ms · Cloudflare 1 MiB in 33.279 → 3.892 s",
+      "meaning": "Four settings changed at once, so this is one bundled result, not four separate gains.",
+      "meters": {
+        "load": {
+          "baseline": {
+            "v": 3967.8,
+            "l": "low-bar bundled baseline"
+          },
+          "points": [
+            {
+              "v": 745,
+              "l": "low-bar bundle",
+              "src": "phone"
+            }
+          ]
+        }
+      },
+      "index": 0,
+      "id": "e-aug-24",
+      "month": "aug",
+      "isoEnd": null,
+      "change": "Low-bar mobile memory/performance rebalance",
+      "measured": "The accepted bundle moved Wikipedia median load <b>3,967.8→745.0 ms</b>, document TTFB <b>1,575.2→248.1 ms</b>, and Cloudflare 1-MiB completion <b>33.279→3.892 s</b> (<b>0.25→2.16 Mbps</b>).",
+      "suites": "A bundled device improvement: target 20→24 MiB, quality/speed window 3/1→4/1, GOGC 10→25 and warm set 256→512 KiB changed together. Peak <b>24.73 MiB</b> passed that experiment's <b>28-MiB active / 24-MiB steady</b> rule; it does not pass the later absolute 24-MiB rule.",
+      "evidence": [
+        {
+          "label": "LOWBAR",
+          "href": "https://github.com/urnetwork/connect/blob/main/LOWBAR.md"
+        }
+      ]
+    },
+    {
+      "date": "Aug 24",
+      "iso": "2026-08-24",
+      "kind": "rejected",
+      "flag": "Neutral",
+      "title": "Check whether the server got slower",
+      "stat": {
+        "v": "−0.05%",
+        "l": "server time in a same-session, six-repetition A/B (geomean)"
+      },
+      "more": "PERFVAR −0.17% · server/proxy +0.05% · allocation counts unchanged",
+      "meaning": "No real change. An earlier apparent slowdown was drift on the test host, so no server tuning was needed.",
+      "index": 1,
+      "id": "e-aug-24-2",
+      "month": "aug",
+      "isoEnd": null,
+      "change": "Rebalance mobile memory after the tighter 20-MiB direction; isolate server cost",
+      "measured": "Exact same-session, six-repetition A/B: server/connect time geomean <b>−0.05%</b>, PERFVAR <b>−0.17%</b>, server/proxy <b>+0.05%</b>; allocation counts unchanged.",
+      "suites": "Server neutrality, not a throughput win. The earlier cross-day apparent slowdown was host drift. No server-specific reclaim tuning was warranted.",
+      "evidence": [
+        {
+          "label": "Server PERFVAR measurements",
+          "href": "https://github.com/urnetwork/server/blob/main/connect/perfvar/MEASUREMENTS.md"
+        }
+      ]
+    },
+    {
+      "date": "Aug 24",
+      "iso": "2026-08-24",
+      "kind": "mixed",
+      "title": "Find the limiter with deeper sequence queues",
+      "stat": {
+        "v": "2,552.3 → 543.7 ms",
+        "l": "median Wikipedia load on a public H1 route, depth 16 → 32"
+      },
+      "more": "1 MiB goodput 0.73 → 4.65 Mbps · depth 64 reached 457.6 ms",
+      "meaning": "A real limiter, found on unpaired public routes. Bigger queues and more memory alone did not help, and were rejected.",
+      "meters": {
+        "load": {
+          "baseline": {
+            "v": 2552.3,
+            "l": "explicit-H1 control"
+          },
+          "points": [
+            {
+              "v": 543.7,
+              "l": "depth 32, public route",
+              "src": "public"
+            },
+            {
+              "v": 457.6,
+              "l": "depth 64, public route",
+              "src": "public"
+            }
+          ]
+        }
+      },
+      "index": 2,
+      "id": "e-aug-24-3",
+      "month": "aug",
+      "isoEnd": null,
+      "change": "Sequence-depth and allocation/admission experiments",
+      "measured": "Public H1 depth 16→32: Wikipedia load median <b>2,552.3→543.7 ms</b>, 1-MiB goodput <b>0.73→4.65 Mbps</b>, runtime peak <b>20.34 MiB</b> in the depth-32 arm. Global depth 64 improved the page median to <b>457.6 ms</b>, but larger receive-only/both-data queues did not reproduce the bulk gain.",
+      "suites": "Useful limiter discovery, <b>unpaired public-route diagnostics</b>, not a universal 6.4× release gain. A 4,096-root gate removed pressure drops but did not improve speed; more memory alone was rejected.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        }
+      ]
+    },
+    {
+      "date": "Aug 25",
+      "iso": "2026-08-25",
+      "kind": "gain",
+      "title": "Send a provider’s packets as one group",
+      "stat": {
+        "v": "2.81×",
+        "l": "throughput draining 16 packets (25,579 → 9,105 ns per drain)"
+      },
+      "more": "19,440 → 4,024 B allocated per drain · 147 → 51 allocations · 16 → 8 wire Packs · ACK fast path 577.8 → 596.5 MB/s",
+      "meaning": "A local packet-path gain, measured inside one process. It is not Internet speed or phone memory.",
+      "meters": {
+        "path": [
+          {
+            "l": "Grouped provider sends",
+            "x": 2.81,
+            "t": "2.81×",
+            "featured": true
+          },
+          {
+            "l": "Pure-TCP-ACK fast path",
+            "t": "577.8 → 596.5 MB/s"
+          }
+        ]
+      },
+      "index": 3,
+      "id": "e-aug-25",
+      "month": "aug",
+      "isoEnd": null,
+      "change": "Whole-group provider sends and pure-TCP-ACK fast path",
+      "measured": "Grouping: <b>25,579→9,105 ns/drain</b>, <b>19,440→4,024 B/drain</b>, <b>147→51 allocations</b>, <b>16→8 wire Packs</b>. ACK fast path: <b>577.8→596.5 MB/s</b>, approximately <b>5,351→2,560 B/op</b>, <b>46→37 allocations</b>.",
+      "suites": "Retained local packet-path efficiency improvements. Same-process boundaries; not Internet throughput or mobile peak-memory measurements.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        }
+      ]
+    },
+    {
+      "date": "Aug 25",
+      "iso": "2026-08-25",
+      "kind": "gain",
+      "title": "Write ready H1 frames without waiting",
+      "stat": {
+        "v": "+85.2%",
+        "l": "ACK-sized local TLS throughput (167.03 → 309.30 MB/s)"
+      },
+      "more": "Full payload +12.9% · TCP writes per frame −25% and −75% · still two allocations per op",
+      "meaning": "It batches only what is already ready, so it adds no delay. Balanced server checks stayed neutral.",
+      "meters": {
+        "path": [
+          {
+            "l": "Ready-drain H1 writes",
+            "x": 1.852,
+            "t": "+85.2%",
+            "featured": true
+          }
+        ]
+      },
+      "index": 4,
+      "id": "e-aug-25-2",
+      "month": "aug",
+      "isoEnd": null,
+      "change": "Nonblocking ready-drain H1 writes, cap 8→32",
+      "measured": "Full-payload local TLS throughput <b>1,305.04→1,473.51 MB/s (+12.9%)</b>; ACK-sized <b>167.03→309.30 MB/s (+85.2%)</b>. TCP writes/frame decreased <b>25% / 75%</b>, respectively; allocations stayed at two/op.",
+      "suites": "Directly measured batching gain without a timer or larger socket storage. Balanced server PERFVAR/proxy checks were effectively neutral (<b>−0.46% / +0.64%</b> time geomean), rejecting the apparent previous-day ~20% regression.",
+      "evidence": [
+        {
+          "label": "Server PERFVAR measurements",
+          "href": "https://github.com/urnetwork/server/blob/main/connect/perfvar/MEASUREMENTS.md"
+        }
+      ]
+    },
+    {
+      "date": "Aug 25",
+      "iso": "2026-08-25",
+      "kind": "recovery",
+      "title": "Stop H1 handoffs from dropping under load",
+      "stat": {
+        "v": "38 / 41 / 52 Mbps",
+        "l": "Fast.com on the exact-provider phone path, from about 6.1 Mbps"
+      },
+      "more": "Active peak 17.60 MiB · 762/762 Pack waits completed · zero carrier or Pack drops · Wikipedia median load 439.2 ms",
+      "meaning": "Strong evidence that the fixed-size H1 path can meet the 40 Mbps goal without spending more memory.",
+      "meters": {
+        "bulk": {
+          "controlled": {
+            "from": 6.1,
+            "to": 41,
+            "runs": [
+              38,
+              41,
+              52
+            ],
+            "x": "6.7×"
+          }
+        },
+        "load": {
+          "points": [
+            {
+              "v": 439.2,
+              "l": "exact-provider phone",
+              "src": "phone"
+            }
+          ]
+        },
+        "fixed": {
+          "l": "H1 handoff drops"
+        }
+      },
+      "index": 5,
+      "id": "e-aug-25-3",
+      "month": "aug",
+      "isoEnd": null,
+      "change": "Reliable H1 handoff/backpressure and logical-flow isolation",
+      "measured": "Exact-provider physical H1: Fast.com <b>38/41/52 Mbps</b>, Wikipedia median TTFB/load <b>181.5/439.2 ms</b>, active runtime peak <b>17.60 MiB</b>; quiet p95 <b>17.61 MiB</b> over 345 seconds. <b>762/762</b> Pack waits completed, zero carrier/Pack drops. An impaired synthetic four-flow lane comparison measured <b>20.247→29.058 Mbps (+43.5%)</b>.",
+      "suites": "Strong evidence that fixed-capacity H1 can meet the 40-Mbps objective without spending more memory. The lane comparison is a scenario signal; public current–baseline–current brackets were provider-variable and do not support one percentage speedup. Later receive-custody work refines overload handling; this is historical evidence, not permission to block all shared receive work.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        },
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Aug 25–26",
+      "iso": "2026-08-25",
+      "kind": "gain",
+      "title": "Count retained memory separately from data in flight",
+      "stat": {
+        "v": "29.59 → 21.77 MiB",
+        "l": "runtime in an exact physical replay (−26.4%)"
+      },
+      "more": "Packet roots 6.15 → 1.78 MiB · quiet p95 20.16 MiB · ACK bookkeeping about 44 → 20 ns per op, no allocations",
+      "meaning": "The budget now charges what is actually held. A variant that mixed the two caused timeouts and was rejected.",
+      "meters": {
+        "memory": [
+          {
+            "l": "Retained-byte accounting",
+            "pct": 26.4,
+            "t": "29.59 → 21.77 MiB",
+            "featured": true
+          }
+        ],
+        "path": [
+          {
+            "l": "ACK bookkeeping",
+            "t": "about 44 → 20 ns/op"
+          }
+        ]
+      },
+      "index": 6,
+      "id": "e-aug-25-26",
+      "month": "aug",
+      "isoEnd": "2026-08-26",
+      "change": "Charge retained allocation separately from logical flight; reduce ACK bookkeeping churn",
+      "measured": "Exact retained-byte accounting physical replay: runtime <b>29.59→21.77 MiB</b>, packet roots <b>6.15→1.78 MiB</b>, ten 1-MiB transfers completed; quiet p95 <b>20.16 MiB</b>. RTT ring/min-deque ACK work changed approximately <b>44→20 ns/op</b>, <b>64→0 B/op</b>, <b>1→0 allocations</b>.",
+      "suites": "Memory/ownership and microkernel gains in their recorded workloads. Charging allocation capacity as if it were the logical delivery window had caused a separate timeout and was rejected.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        }
+      ]
+    },
+    {
+      "date": "Aug 26–27",
+      "iso": "2026-08-26",
+      "kind": "recovery",
+      "title": "Recover from poisoned exits and choose healthier providers",
+      "stat": {
+        "v": "92.5 Mbps",
+        "l": "combined median of public H1 observations (47/100/110, then 68/85/130)"
+      },
+      "more": "Wikipedia median load 478.3 ms afterwards · one runtime peak of 24.30 MiB failed that week’s 24 MiB gate",
+      "meaning": "Playback came back in the documented cases. These public speeds show what is reachable; they are not a controlled A/B.",
+      "meters": {
+        "bulk": {
+          "points": [
+            {
+              "v": 92.5,
+              "l": "public H1 routes, combined median"
+            }
+          ]
+        },
+        "load": {
+          "points": [
+            {
+              "v": 478.3,
+              "l": "public route, after recovery",
+              "src": "public"
+            }
+          ]
+        },
+        "fixed": {
+          "l": "Playback after poisoned exits"
+        }
+      },
+      "index": 7,
+      "id": "e-aug-26-27",
+      "month": "aug",
+      "isoEnd": "2026-08-27",
+      "change": "Poisoned-exit recovery, fresh-flow quality selection and provider-off budget use",
+      "measured": "Recovery and provider-selection changes restored playback in the documented cases. Public four-route-floor H1 observations were <b>47/100/110</b>, then <b>68/85/130 Mbps</b> (combined median <b>92.5 Mbps</b>); subsequent Wikipedia median load <b>478.3 ms</b>. One runtime peak was <b>24.30 MiB</b>.",
+      "suites": "Availability/selection improvements and proof of attainable speed, not a controlled source-level speed effect. That peak <b>failed the then-current 24-MiB gate</b> and must not be retroactively passed using today's 32-MiB limit.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Aug 27",
+      "iso": "2026-08-27",
+      "kind": "gain",
+      "title": "Share UDP readiness and idle handling on providers",
+      "stat": {
+        "v": "621 → 242",
+        "l": "goroutines on the provider host (−61%)"
+      },
+      "more": "Runtime 27.9 → 25.8 MiB · live heap 10.4 → 9.4 MiB · UDP round trips +10.4% · TCP echo +1.9%",
+      "meaning": "Fewer threads and less memory on the provider host. The physical provider was still above its 24 MiB limit then.",
+      "meters": {
+        "memory": [
+          {
+            "l": "Shared provider UDP lifecycle",
+            "pct": 7.5,
+            "t": "27.9 → 25.8 MiB",
+            "featured": true
+          }
+        ],
+        "path": [
+          {
+            "l": "Provider UDP round trips",
+            "t": "+10.4%"
+          }
+        ]
+      },
+      "index": 8,
+      "id": "e-aug-27",
+      "month": "aug",
+      "isoEnd": null,
+      "change": "Shared provider UDP readiness, direct writes and shared idle lifecycle",
+      "measured": "Five fresh runs/arm: TCP echo <b>53.1→54.1 MiB/s (+1.9%)</b>; UDP <b>13,960.4→15,414.3 round trips/s (+10.4%)</b>; runtime <b>27.9→25.8 MiB</b>; live heap <b>10.4→9.4 MiB</b>; goroutines <b>621→242 (−61%)</b>.",
+      "suites": "Retained provider efficiency win. The synthetic 31-MiB host gate passed, but the physical provider remained above its historical 24-MiB limit.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Sep 4",
+      "iso": "2026-09-04",
+      "kind": "groundwork",
+      "title": "Bound the TCP inbound handoff",
+      "stat": null,
+      "meaning": "A correctness and recovery milestone. The campaign set no new baseline, so no speed gain is inferred.",
+      "index": 9,
+      "id": "e-sep-4",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "Bounded TCP inbound handoff",
+      "measured": "The static campaign and its correctness/failure accounting are recorded in the measurement ledger.",
+      "suites": "A correctness/recovery milestone. Do not infer a universal speed gain from a campaign that did not promote a baseline.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        },
+        {
+          "label": "LOWBAR",
+          "href": "https://github.com/urnetwork/connect/blob/main/LOWBAR.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 9–11",
+      "iso": "2026-09-09",
+      "kind": "recovery",
+      "title": "Remove the flight-gate collapse on mixed routes",
+      "stat": {
+        "v": "2.5 → 18.5 Mbps",
+        "l": "stock vs merged in the mixed loss/100 TCP cell"
+      },
+      "more": "Stock failed 13/40 runs · at loss/300 stock missed all five deadlines while merged delivered 19.3 Mbps · relay timeout rewrites 19,966 → 201",
+      "meaning": "A collapse on mixed routes is gone. These are specific test cells, not an app-wide multiplier.",
+      "meters": {
+        "fixed": {
+          "l": "Mixed-route flight-gate collapse"
+        }
+      },
+      "index": 10,
+      "id": "e-sep-9-11",
+      "month": "sep",
+      "isoEnd": "2026-09-11",
+      "change": "Remove mixed-route flight-gate collapse",
+      "measured": "In the recorded mixed loss/100 TCP cell, stock <b>2.5→18.5 Mbps</b>; loss/300 stock failed all five deadlines while merged delivered <b>19.3 Mbps</b>. Stock failed <b>13/40</b> runs. Separately, deferred relay retransmission moved <b>13.1→15.7 Mbps</b>, timeout rewrites <b>19,966→201</b>, dead windows <b>6→0</b>.",
+      "suites": "Functional collapse/retransmission recovery. The relay A/B is distinct from the mixed-route cells; neither is a general app multiplier. Later A/A retired many small early percentage verdicts.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        },
+        {
+          "label": "LOWBAR",
+          "href": "https://github.com/urnetwork/connect/blob/main/LOWBAR.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 12–13",
+      "iso": "2026-09-12",
+      "kind": "recovery",
+      "title": "Stop retransmission storms",
+      "stat": {
+        "v": "5/40 → 0/40",
+        "l": "runs with timeout storms, 20 runs per arm in two cells"
+      },
+      "more": "Maximum writes 3,902 → 36 · goodput medians 20.9 → 21.2 and 19.5 → 19.9 Mbps",
+      "meaning": "The gain is in the worst cases, not the typical run.",
+      "rejected": "A proposed reliable-lane rule caused wedges, 0/120 off vs 8/120 on (Fisher p = .0069), and stayed off.",
+      "meters": {
+        "fixed": {
+          "l": "Retransmission timeout storms"
+        }
+      },
+      "index": 11,
+      "id": "e-sep-12-13",
+      "month": "sep",
+      "isoEnd": "2026-09-13",
+      "change": "Bound retransmission amplification; reject harmful lane rules",
+      "measured": "Twenty runs/arm in two storm cells: timeout storms <b>5/40→0/40</b>, maximum writes <b>3,902→36</b>; goodput medians only <b>20.9→21.2</b> and <b>19.5→19.9 Mbps</b>. A separate proposed reliable-lane rule produced mechanism wedges <b>0/120 off vs 8/120 on</b> (Fisher p=.0069), and stayed <b>off</b>.",
+      "suites": "Main gain is reduced tail amplification. A/A on identical source flagged <b>15/17</b> cells at five repetitions; earlier small verdicts were retired. Rejected lane-rule behavior must not be counted as an improvement.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        },
+        {
+          "label": "LOWBAR",
+          "href": "https://github.com/urnetwork/connect/blob/main/LOWBAR.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 13",
+      "iso": "2026-09-13",
+      "kind": "mixed",
+      "title": "Match provider socket buffers to kernel autotuning",
+      "stat": {
+        "v": "4.63× / −20.8%",
+        "l": "paired throughput at an artificial 1 MiB floor, then at the realistic 32 MiB policy"
+      },
+      "more": "Linux upstream-only fixture · six pairs, then five pairs",
+      "meaning": "The same deletion helped one setup and hurt another, so the rule now depends on the kernel’s actual ceiling.",
+      "index": 12,
+      "id": "e-sep-13",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "Match provider socket-buffer requests to kernel autotuning",
+      "measured": "In a Linux upstream-only fixture at an artificial 1-MiB provider floor, removing the send-buffer pin improved paired throughput <b>4.63×</b> (six pairs). At the realistic 32-MiB policy, the same deletion instead lost <b>20.8%</b> (five pairs).",
+      "suites": "The retained rule became conditional on the actual kernel/autotuning ceiling, not unconditional deletion. No universal 4.6× app gain. A claimed receive-rate gain was retired by noisy A/A; restored receive-buffer growth remained mechanistically proven.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        },
+        {
+          "label": "LOWBAR",
+          "href": "https://github.com/urnetwork/connect/blob/main/LOWBAR.md"
+        },
+        {
+          "label": "THROUGHPUTFIX",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUTFIX.md"
+        },
+        {
+          "label": "THROUGHPUT-REPORT",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUT-REPORT.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 14",
+      "iso": "2026-09-14",
+      "kind": "gain",
+      "title": "Size delivery windows to what is actually delivered",
+      "stat": {
+        "v": "68.4 → 84.6 Mbps",
+        "l": "in-process download, 12 interleaved pairs (ratio 1.233, 95% CI 1.064–1.306)"
+      },
+      "more": "A later transfer-only instrument: 2.92× and 2.42× at 16 KiB, 200 and 400 ms",
+      "meaning": "A real window-layer gain in its fixtures. It does not measure the whole chain, and no whole-chain forecast is claimed.",
+      "meters": {
+        "path": [
+          {
+            "l": "Delivery-sized windows",
+            "t": "paired ratio 1.233"
+          }
+        ]
+      },
+      "index": 13,
+      "id": "e-sep-14",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "Delivery-sized windows, independently checked",
+      "measured": "Twelve interleaved in-process download pairs: <b>68.4→84.6 Mbps</b>, median paired ratio <b>1.233</b>, 95% CI <b>[1.064, 1.306]</b>. A later transfer-only seven-pair instrument measured <b>2.92× / 2.42×</b> at 16 KiB and 200/400 ms; absolute medians <b>71→190 / 34→88 Mbps</b>.",
+      "suites": "Real window-layer gains in distinct fixtures. The later instrument omits H3, gVisor, NAT, sockets and contracts; three drift-flagged pairs remain in its seven-ratio result. It does <b>not</b> measure derived whole-chain 425/830-Mbps forecasts. More retained flight and failover/hold-inversion risks were separately measured.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        },
+        {
+          "label": "LOWBAR",
+          "href": "https://github.com/urnetwork/connect/blob/main/LOWBAR.md"
+        },
+        {
+          "label": "THROUGHPUTFIX",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUTFIX.md"
+        },
+        {
+          "label": "THROUGHPUT-REPORT",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUT-REPORT.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 14–19",
+      "iso": "2026-09-14",
+      "kind": "groundwork",
+      "title": "Scale budgets with the target and share one accounting root",
+      "stat": null,
+      "meaning": "Lets larger profiles use spare headroom without losing track of old owners. Architecture, not a measured speed gain.",
+      "index": 14,
+      "id": "e-sep-14-19",
+      "month": "sep",
+      "isoEnd": "2026-09-19",
+      "change": "Scale policy with target; share one transfer/topology root",
+      "measured": "Proportional sizing was introduced Sep 14; Sep 17–19 changes enforce shared client/provider/NAT/retiring-generation accounting and atomic admission.",
+      "suites": "Provider-OFF sharing and larger future profiles can use bounded headroom without losing charges for old owners. This is architectural/correctness evidence, not an independently measured speed gain.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        },
+        {
+          "label": "LOWBAR",
+          "href": "https://github.com/urnetwork/connect/blob/main/LOWBAR.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 16–17",
+      "iso": "2026-09-16",
+      "kind": "gain",
+      "flag": "Milestone",
+      "title": "Reach gigabit-class throughput with adaptive windows",
+      "stat": {
+        "v": "939–942 Mbps",
+        "l": "useful TCP payload sustained after startup, on a local TCP path with 1-Gbps service"
+      },
+      "more": "Larger-buffer controls 942–943 Mbps · ACK-residence model 202.752 → 958.259–958.362 Mbps, ≈4.73× · RTT-change model 4.055 → 958.075 Mbps",
+      "meaning": "A major achieved milestone: windows sized to what is delivered keep a fast path full. It was measured on a host-local path, and window resizing stays on after October’s pacing change.",
+      "meters": {
+        "path": [
+          {
+            "l": "Adaptive windows (model)",
+            "x": 4.73,
+            "t": "≈4.73×",
+            "featured": true
+          }
+        ]
+      },
+      "change": "Gigabit-target adaptive windows and ACK-residence recovery",
+      "measured": "ACK-residence model <b>202.752→958.259–958.362 Mbps</b>; RTT-change model <b>4.055→958.075 Mbps</b> at 1-Gbps service. Local TCP-path checks sustained <b>939–942 Mbps</b> after startup; larger-buffer controls reached <b>942–943 Mbps</b>.",
+      "suites": "A major achieved gigabit-class milestone. The host socket/TUN, virtual model and capacity-control scopes remain distinct; the dedicated section above preserves the bounds and slow/censored cases. Window resizing remains enabled after October's pacing removal.",
+      "evidence": [
+        {
+          "label": "THROUGHPUT-PR2-RESULTS",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUT-PR2-RESULTS.md"
+        },
+        {
+          "label": "THROUGHPUT-REPORT-PR2",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUT-REPORT-PR2.md"
+        },
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        }
+      ],
+      "month": "sep",
+      "index": 15,
+      "id": "e-sep-16-17"
+    },
+    {
+      "date": "Sep 17",
+      "iso": "2026-09-17",
+      "kind": "gain",
+      "title": "Choose a compact delivery history for each service",
+      "stat": {
+        "v": "360 B",
+        "l": "per service for the six-entry shape kept; the rejected 64-entry shape needed 3,608 B"
+      },
+      "more": "Publish, estimate and rebucket all without allocation · H1 smoke 91.526 vs 91.552 Mbps, neutral",
+      "meaning": "An exact bound on per-service state, with speed unchanged. It sets no new throughput baseline.",
+      "index": 16,
+      "id": "e-sep-17",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "Compact shared-service delivery history",
+      "measured": "Final six-entry shape <b>360 B/service</b> versus <b>3,608 B</b> for the rejected 64-entry shape. Publish/estimate/rebucket screens <b>375.5/450.0/98.21 ns</b> versus <b>387.0/600.6/573.9 ns</b>, all zero-allocation. H1 smoke <b>91.526 vs 91.552 Mbps</b> was neutral.",
+      "suites": "Exact bounded-state reduction; CPU screens ran under changing host load. Broad acceptance remained open, so neither model/race passes nor the smoke test establish a new throughput baseline.",
+      "evidence": [
+        {
+          "label": "THROUGHPUT-REPORT-PR2",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUT-REPORT-PR2.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 20",
+      "iso": "2026-09-20",
+      "kind": "recovery",
+      "title": "Count congestion-blocked P2P sends as service evidence",
+      "stat": {
+        "v": "383 → 468 of 468",
+        "l": "synthetic fixed-offer admissions at 50 µs write service"
+      },
+      "more": "At 1 ms service 422 → 468 of 468 · immediate ACKs alone reached only 317/468",
+      "meaning": "It fixed the signal instead of raising the congestion window. It is not a high-latency speed test on phones.",
+      "meters": {
+        "fixed": {
+          "l": "P2P fixed-offer admissions"
+        }
+      },
+      "index": 17,
+      "id": "e-sep-20",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "P2P cwnd-blocked service evidence",
+      "measured": "Synthetic fixed-offer admissions improved <b>383/468→468/468</b> at 50-µs write service and <b>422/468→468/468</b> at 1-ms service. Immediate ACKs alone had reached only <b>317/468</b>.",
+      "suites": "Retained service-evidence correction, rather than an arbitrary cwnd increase. One later clean two-phone replay recorded client/provider peaks <b>19.16/17.69 MiB</b> with zero pressure drops; that fixture did not impose high RTT and is not a high-RTT physical speed A/B.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        },
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Sep 20",
+      "iso": "2026-09-20",
+      "kind": "rejected",
+      "flag": "Rejected",
+      "title": "Reject lower Go memory soft limits",
+      "stat": {
+        "v": "280.20 → 180.67 Mbps",
+        "l": "local echo when the soft limit went from 32 to 24 MiB"
+      },
+      "more": "p95 RTT 6.426 → 12.629 ms · GC cycles 177 → 357 · for about 1.14 MiB less quiet runtime",
+      "meaning": "Using less memory made it much slower, so the change was rejected. Lower residency alone is not better performance.",
+      "index": 18,
+      "id": "e-sep-20-2",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "Reject blanket lower Go soft limits and topology shrinking",
+      "measured": "Soft limit 32→24 MiB changed local echo <b>280.20→180.67 Mbps</b>, p95 RTT <b>6.426→12.629 ms</b>, GC cycles <b>177→357</b>, for only about <b>1.14 MiB</b> lower quiet runtime. Smaller client-window experiments had incomplete traffic arms.",
+      "suites": "Rejected: lower residency alone was not better performance. The historical surrogate also had a later-discovered carrier-reliability limitation, so it is not a current app prediction. Failed traffic arms were not removed to improve survivor medians.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        },
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Sep 19–21",
+      "iso": "2026-09-19",
+      "kind": "observation",
+      "title": "A phone run passes a scoped 24 MiB check",
+      "stat": {
+        "v": "22.55 MiB",
+        "l": "sampled peak in a scoped physical H1 run"
+      },
+      "more": "Wikipedia median load 355.3 ms, first byte 127.7 ms · Fast.com median 40 Mbps",
+      "meaning": "A pass for this scope only: not every carrier or role, and not a continuous-peak guarantee.",
+      "meters": {
+        "load": {
+          "points": [
+            {
+              "v": 355.3,
+              "l": "scoped phone run",
+              "src": "phone"
+            }
+          ]
+        },
+        "bulk": {
+          "points": [
+            {
+              "v": 40,
+              "l": "Fast.com median, scoped phone run"
+            }
+          ]
+        }
+      },
+      "index": 19,
+      "id": "e-sep-19-21",
+      "month": "sep",
+      "isoEnd": "2026-09-21",
+      "change": "P2P fixed-offer recovery, packet allocation and mobile retention/logging work",
+      "measured": "A post-glog scoped physical H1 run observed peak <b>23,646,240 B (22.55 MiB)</b>, Wikipedia load/TTFB medians <b>355.3/127.7 ms</b>, and Fast.com median <b>40 Mbps</b>.",
+      "suites": "A passing <b>scoped sampled 24-MiB</b> result, not all carriers/roles or a continuous-peak guarantee. Earlier quiet passes with burst breaches remained failures.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        },
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Sep 21",
+      "iso": "2026-09-21",
+      "kind": "gain",
+      "title": "Allocate less per packet and shrink mobile log buffers",
+      "stat": {
+        "v": "49.33 → 23.88 ns",
+        "l": "appending to an existing packet group, now with no allocations"
+      },
+      "more": "Raw receive 193.9 → 169.3 ns and 280 → 168 B · three log buffers 256 → 32 KiB each, 688,128 B less",
+      "meaning": "Less allocation and more headroom. A saturated log sink costs slightly more, and that trade-off is recorded.",
+      "meters": {
+        "path": [
+          {
+            "l": "Existing-group append",
+            "t": "49.33 → 23.88 ns/op"
+          }
+        ],
+        "memory": [
+          {
+            "l": "Mobile log buffers",
+            "t": "688,128 B less"
+          }
+        ]
+      },
+      "index": 20,
+      "id": "e-sep-21",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "Packet allocation and mobile logging",
+      "measured": "Existing-group append <b>49.33→23.88 ns/op</b>, <b>136→0 B/op</b>, <b>2→0 allocations</b>; raw receive <b>193.9→169.3 ns/op</b>, <b>280→168 B/op</b>. Three mobile log buffers <b>256→32 KiB each</b>, exactly <b>688,128 B</b> less capacity.",
+      "suites": "Retained allocation/headroom improvements. Saturated log-sink cost increased <b>43.54→46.13 ns/line</b>; the trade-off is recorded rather than described as a free CPU improvement.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        },
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Sep 22",
+      "iso": "2026-09-22",
+      "kind": "gain",
+      "title": "H1+: a leaner carrier inside H1",
+      "stat": {
+        "v": "+32.35% / +18.68% / +36.31%",
+        "l": "upload, download and duplex throughput in the paired local cohort"
+      },
+      "more": "CPU −24.35%, −16.78%, −22.56% · allocations per packet 3/2/2.5 → 1/1/1 · bytes per packet 82/34/57 → 6/5/5",
+      "meaning": "Strong local carrier evidence. Loopback rates are not Fast.com, full-tunnel or battery results, and WebSocket fallback stays.",
+      "meters": {
+        "path": [
+          {
+            "l": "H1+ carrier",
+            "x": [
+              1.1868,
+              1.3631
+            ],
+            "t": "1.19–1.36×",
+            "featured": true
+          }
+        ]
+      },
+      "index": 21,
+      "id": "e-sep-22",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "General Framer and H1+",
+      "measured": "Implemented H1+ carrier paired medians: upload <b>11,388.68→15,343.40 Mbps</b>, download <b>13,875.60→16,265.00 Mbps</b>, duplex <b>21,374.16→29,009.96 Mbps</b>. Paired effects <b>+32.35%, +18.68%, +36.31%</b>; CPU reductions <b>24.35%, 16.78%, 22.56%</b>. Allocations/packet <b>3/2/2.5→1/1/1</b>; bytes/packet <b>82/34/57→6/5/5</b>.",
+      "suites": "Strong local carrier evidence, with confidence intervals in H1PLUS.md. Standard WebSocket fallback remains required. These multi-gigabit loopback rates are not PERFVAR full-TUN, hosted Fast.com or measured battery scores.",
+      "evidence": [
+        {
+          "label": "H1PLUS",
+          "href": "https://github.com/urnetwork/connect/blob/main/H1PLUS.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 22",
+      "iso": "2026-09-22",
+      "kind": "gain",
+      "title": "Give single frames a faster path in the Framer",
+      "stat": {
+        "v": "+101.65%",
+        "l": "paired TLS upload throughput (2,378.50 → 4,795.79 Mbps)"
+      },
+      "more": "CPU 7,742.85 → 3,916.74 ns per packet · TLS writes 300,000 → 150,000",
+      "meaning": "Kept. Ready-batch controls were neutral.",
+      "rejected": "A reusable read-header candidate lost 1.82% on upload and was rejected.",
+      "meters": {
+        "path": [
+          {
+            "l": "Framer singleton path",
+            "x": 2.0165,
+            "t": "2.02×",
+            "featured": true
+          }
+        ]
+      },
+      "index": 22,
+      "id": "e-sep-22-2",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "General Framer singleton storage path",
+      "measured": "Ten paired TLS upload arms: <b>2,378.50→4,795.79 Mbps</b>, paired <b>+101.65%</b>; CPU <b>7,742.85→3,916.74 ns/packet</b>; TLS writes <b>300,000→150,000</b>.",
+      "suites": "Retained singleton-path optimization. Ready-batch controls were neutral. A reusable read-header candidate regressed upload <b>1.82%</b> and was rejected.",
+      "evidence": [
+        {
+          "label": "H1PLUS",
+          "href": "https://github.com/urnetwork/connect/blob/main/H1PLUS.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 22–23",
+      "iso": "2026-09-22",
+      "kind": "gain",
+      "title": "Carry device RPC over FramerXL, then reuse descriptors",
+      "stat": {
+        "v": "142 → 107 µs",
+        "l": "median 64 KiB forward RPC (p95 304.40 → 242.83 µs)"
+      },
+      "more": "Paired throughput +32.31% · near 3 MiB +43.73% · 256 B RPC allocation 3,608 → 1,816 B",
+      "meaning": "Faster native RPC with both ends measured. Large frames still allocate; H1+ and RPC became default on Sep 23, with WebSocket fallback.",
+      "meters": {
+        "path": [
+          {
+            "l": "Device RPC over FramerXL",
+            "t": "+32.31%"
+          }
+        ]
+      },
+      "index": 23,
+      "id": "e-sep-22-23",
+      "month": "sep",
+      "isoEnd": "2026-09-23",
+      "change": "Native device RPC over FramerXL, then descriptor reuse",
+      "measured": "Initial 64-KiB forward RPC p50 <b>142→107 µs</b>, p95 <b>304.40→242.83 µs</b>, paired throughput <b>+32.31%</b>; near-3-MiB forward throughput <b>+43.73%</b>. Descriptor reuse then reduced 256-B RPC allocation <b>3,608→1,816 B</b>, <b>28→26 allocations</b>, GC cycles <b>6→3</b>, with <b>+1.56%</b> forward throughput over old XL.",
+      "suites": "Both native mux endpoints/gob/TLS included; bounded per-mux storage repaired the small-RPC regression. Large-frame temporary allocation was not free, near-limit duplex retained a 4-MiB-budget negative case, and no material sampled-peak reduction was proven. H1+/RPC became default-on Sep 23 with WebSocket fallback.",
+      "evidence": [
+        {
+          "label": "H1PLUS",
+          "href": "https://github.com/urnetwork/connect/blob/main/H1PLUS.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 22",
+      "iso": "2026-09-22",
+      "kind": "rejected",
+      "flag": "Not adopted",
+      "title": "Try SIMD WebSocket masking",
+      "stat": {
+        "v": "+3.52%",
+        "l": "forced-mask socket throughput at 1,280 bytes (1,310.045 → 1,355.200 MB/s)"
+      },
+      "more": "Process CPU −2.67% · complete PERFVAR clean-LAN upload and download: no established gain",
+      "meaning": "Research only, not adopted: the socket gain did not hold end to end, and battery energy was not measured.",
+      "index": 24,
+      "id": "e-sep-22-3",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "Portable SIMD WebSocket masking prototype",
+      "measured": "At 1,280 bytes, forced-mask socket throughput <b>1,310.045→1,355.200 MB/s</b> (paired gain <b>3.52%</b>), process CPU reduction <b>2.67%</b>. Complete PERFVAR clean-LAN upload/download showed <b>no established gain</b>; multiplicity-adjusted socket tests were inconclusive.",
+      "suites": "Research only, <b>not adopted/promoted</b>. No battery-energy measurement. The often-quoted <b>0.115%</b> masking share belongs to one full-fixture CPU attribution, not every packet path.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 23",
+      "iso": "2026-09-23",
+      "kind": "mixed",
+      "title": "Dispatch short bursts directly and fix an overconfident estimate",
+      "stat": {
+        "v": "1,499.17 → 1,718.06 Mbps",
+        "l": "virtual-time SDK duplex median (+14.6%), with one phase 4.1% slower"
+      },
+      "more": "An estimator had inferred 52.4288 MB/s from a 12.5 MB/s source; it now keeps 12.5",
+      "meaning": "Deterministic sizing and recovery fixes in virtual time, not a CPU, energy or physical-speed gain. Later pacing work supersedes it.",
+      "index": 25,
+      "id": "e-sep-23",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "Short-path dispatch and estimator provenance",
+      "measured": "Virtual-time five-phase SDK duplex median <b>1,499.17→1,718.06 Mbps (+14.6%)</b>, with one phase <b>4.1% slower</b>. A recovered-prefix estimator falsely inferred <b>52.4288 MB/s</b> from a <b>12.5-MB/s</b> serialized source; the correction preserved 12.5 and admitted later independent 25-MB/s evidence.",
+      "suites": "Deterministic sizing/recovery improvements and guarded virtual throughput, not host CPU/energy or physical-speed gains. Later pacing-off work supersedes extrapolating this scheduling result to today's default.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 25–26",
+      "iso": "2026-09-25",
+      "kind": "mixed",
+      "title": "Test shorter retransmission caps and UDP without ACKs",
+      "stat": {
+        "v": "≈18.7% / ≈64.1%",
+        "l": "faster recovery after six and ten drops with a 2 s cap (240/240 streams correct)"
+      },
+      "more": "Cost rose with high RTT and one loss · UDP NoAck 213.627 → 213.345 Mbps on H1, 256.042 → 256.964 Mbps on P2P",
+      "meaning": "Faster after many drops, costlier on slow links, so there is no global 2 s default. UDP NoAck was kept as a policy at the same speed.",
+      "index": 26,
+      "id": "e-sep-25-26",
+      "month": "sep",
+      "isoEnd": "2026-09-26",
+      "change": "Retransmission caps, TCP-collapse custody and established UDP NoAck",
+      "measured": "Ten-pair 8s-vs-2s TUN confirmation: <b>240/240</b> streams correct; six-drop recovery ~<b>18.7% faster</b>, ten-drop ~<b>64.1% faster</b>. High-RTT/one-loss cost increased, so <b>no global 2-second default</b> was justified. Established UDP H1 clean upload medians <b>213.627→213.345 Mbps</b> (ACK→NoAck); P2P <b>256.042→256.964 Mbps</b>.",
+      "suites": "Timer research was mixed; 3/3 and 5/5 pilots were not qualified default wins. UDP NoAck was retained as a policy choice with comparable measured performance, not a speedup. A logical-group bypass regressed H3 and was removed. TCP remains ACK-required.",
+      "evidence": [
+        {
+          "label": "RTOPT",
+          "href": "https://github.com/urnetwork/connect/blob/main/RTOPT.md"
+        }
+      ]
+    },
+    {
+      "date": "Sep 30",
+      "iso": "2026-09-30",
+      "kind": "groundwork",
+      "title": "Adopt larger memory profiles and stop early Android trims",
+      "stat": {
+        "v": "64 / 32 MiB",
+        "l": "Android and iOS admission budgets, up from 28 and 20 MiB"
+      },
+      "more": "Android reclaim threshold 24 → 48 MiB · forced trims 1,1 → 0,0 · resume pool creations 44/41 → 0/0",
+      "meaning": "A policy and maintenance change, not proof of higher speed. A larger cap is not a memory-efficiency gain.",
+      "index": 27,
+      "id": "e-sep-30",
+      "month": "sep",
+      "isoEnd": null,
+      "change": "Adopt larger profiles and avoid premature Android64 reclaim",
+      "measured": "Android admission/soft <b>28/40→64/64 MiB</b>, iOS admission <b>20→32 MiB</b> with soft32. Android reclaim threshold <b>24→48 MiB</b>: two-run forced trims <b>1,1→0,0</b>, quiet GC CPU <b>0.0601/0.0707→0.0242/0.0322 s</b>, resume pool creations <b>44/41→0/0</b>.",
+      "suites": "Retained policy/maintenance improvement, <b>not proof of higher speed</b>. Two noisy host repetitions at full Android capacity had quality/speed means <b>354.90/358.84→342.40/340.69 Mbps</b>; roots were unsaturated. Hardware clamping still applies. Neither host screens nor partial device cells qualify the profile matrix or native iOS footprint.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        },
+        {
+          "label": "LOWBAR",
+          "href": "https://github.com/urnetwork/connect/blob/main/LOWBAR.md"
+        }
+      ]
+    },
+    {
+      "date": "Oct 2–5",
+      "iso": "2026-10-02",
+      "kind": "recovery",
+      "title": "Repair NAT-stage custody so uploads finish",
+      "stat": {
+        "v": "6/6",
+        "l": "exact 32 MiB H1 upload streams, default and mobile, three fresh processes each"
+      },
+      "more": "About 0.377–0.381 s default · about 0.559–0.566 s mobile · the outer TCP PTO needed a separate gVisor fix",
+      "meaning": "A liveness repair with diagnostic timings, not a calibrated speed effect. Two causes, two fixes.",
+      "meters": {
+        "fixed": {
+          "l": "NAT-stage uploads"
+        }
+      },
+      "index": 28,
+      "id": "e-oct-2-5",
+      "month": "oct",
+      "isoEnd": "2026-10-05",
+      "change": "TCP PTO/reverse-traffic and provider NAT-stage custody",
+      "measured": "A distinct NAT-stage repair completed default and mobile 32-MiB H1 uploads in three fresh processes per comparison: <b>6/6</b> exact streams, approximately <b>0.377–0.381 s</b> default and <b>0.559–0.566 s</b> mobile. The outer-TCP PTO issue required a separate managed gVisor fix.",
+      "suites": "Deterministic correctness/liveness repair and diagnostic timings. These are not a calibrated PERFVAR speed effect; the two causes must not be merged into one explanation.",
+      "evidence": [
+        {
+          "label": "RTOPT",
+          "href": "https://github.com/urnetwork/connect/blob/main/RTOPT.md"
+        }
+      ]
+    },
+    {
+      "date": "Oct 7–10",
+      "iso": "2026-10-07",
+      "kind": "groundwork",
+      "title": "Repair how loaded H1 traffic is measured",
+      "stat": null,
+      "meaning": "The measurement improved, not the product’s score: replies settle by their own deadlines and every one counts.",
+      "index": 29,
+      "id": "e-oct-7-10",
+      "month": "oct",
+      "isoEnd": "2026-10-10",
+      "change": "H1 loaded-traffic diagnosis and measurement repair",
+      "measured": "The historical <b>0/64</b> loaded-probe failure motivated owner/trace work. Later runs had varying offer counts and calibration failures; some apparent p95/reliability improvements used different cohorts or excluded unresolved replies.",
+      "suites": "No qualified overall H1 speed improvement can be assigned here. Better settlement, source/owner guards and full denominators improved the measurement system, not the product's score.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Oct 14",
+      "iso": "2026-10-14",
+      "kind": "groundwork",
+      "title": "Give each device owner its own low-memory policy",
+      "stat": null,
+      "meaning": "An explicit 32 MiB policy per owner, which is not a server memory cap. Policy correctness, with no speed claim.",
+      "index": 30,
+      "id": "e-oct-14",
+      "month": "oct",
+      "isoEnd": null,
+      "change": "Shared iOS/proxy low-memory policy",
+      "measured": "Explicit per-owner 32-MiB policy replaced numeric-only proxy targeting; Android remains 64 MiB. Owner-settings cloning prevents unrelated devices from sharing mutable budget assignments.",
+      "suites": "Policy/ownership correctness. The per-device proxy target is <b>not a 32-MiB server-process RSS cap</b>, and this change has no established speed uplift.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        },
+        {
+          "label": "LOWBAR",
+          "href": "https://github.com/urnetwork/connect/blob/main/LOWBAR.md"
+        }
+      ]
+    },
+    {
+      "date": "Oct 16–18",
+      "iso": "2026-10-16",
+      "kind": "gain",
+      "title": "Correct H1 memory claims and make admission allocation-free",
+      "stat": {
+        "v": "128 B → 16 B",
+        "l": "per canceled write on one route, 2 → 1 allocations"
+      },
+      "more": "Two routes 368 → 144 B · three routes 1,976 → 1,640 B · ready-path allocations unchanged",
+      "meaning": "Less allocation and honest memory admission. No end-to-end throughput increase is shown.",
+      "meters": {
+        "memory": [
+          {
+            "l": "Canceled-write allocation",
+            "t": "128 → 16 B"
+          }
+        ]
+      },
+      "index": 31,
+      "id": "e-oct-16-18",
+      "month": "oct",
+      "isoEnd": "2026-10-18",
+      "change": "Correct H1 retained-root claims and allocation-free successful admission",
+      "measured": "Measured retained H1/H1+ roots exceeded old claims. Corrected accounting retained channel sizes. Lazy byte-notification creation reduced one-route canceled-write cost <b>128 B/2 allocs→16 B/1 alloc</b>, two-route <b>368 B/7→144 B/5</b>, three-route <b>1,976 B/21→1,640 B/18</b>. Ready-path allocations stayed unchanged.",
+      "suites": "Retained allocation reduction plus honest memory admission; no demonstrated end-to-end throughput increase. Receive/ACK custody and refusal fixes protect unrelated flows but still require whole-path qualification.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        }
+      ]
+    },
+    {
+      "date": "Oct 19",
+      "iso": "2026-10-19",
+      "kind": "gain",
+      "title": "Release finished readers in gVisor TCP",
+      "stat": {
+        "v": "7.86 → 0.54 MiB",
+        "l": "warm-heap spread in one matched race diagnostic (−93.1%)"
+      },
+      "more": "Closed endpoints had kept 128 KiB caller arrays · three normal and three race SDK confirmations passed",
+      "meaning": "A strong local retention fix. It is not a phone runtime or throughput result.",
+      "meters": {
+        "memory": [
+          {
+            "l": "Stale TCP reader released",
+            "pct": 93.1,
+            "t": "7.86 → 0.54 MiB",
+            "featured": true
+          }
+        ]
+      },
+      "index": 32,
+      "id": "e-oct-19",
+      "month": "oct",
+      "isoEnd": null,
+      "change": "Release exhausted caller readers in gVisor TCP",
+      "measured": "One matched race diagnostic: warm-heap spread <b>8,243,416 B (7.86 MiB)→567,664 B (0.54 MiB)</b>. Old endpoints retained 128-KiB caller arrays through <code>io.LimitedReader.R</code>; clear the reader while preserving TCP lifetimes. Three normal and three race SDK-load confirmations passed.",
+      "suites": "Strong local retention fix, not a phone runtime or throughput result. Endpoint counts remained similar, supporting reference release rather than changed TCP-close behavior.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        }
+      ]
+    },
+    {
+      "date": "Oct 20–21",
+      "iso": "2026-10-20",
+      "kind": "groundwork",
+      "title": "Keep busy channels and native input from blocking each other",
+      "stat": null,
+      "meaning": "Correctness and regression coverage. It is not a measured fix for the pauses seen on real devices.",
+      "index": 33,
+      "id": "e-oct-20-21",
+      "month": "oct",
+      "isoEnd": "2026-10-21",
+      "change": "Preserve busy channels on local probe refusal; isolate native input admission",
+      "measured": "Deterministic tests reproduced a serialized native-read delay when a packet-send call waits; remote admission was made zero-wait while preserving reliable ownership. Earlier easy 100-page tests passed old and new code, so they did not explain the reported session.",
+      "suites": "Correctness and regression coverage, not an independently measured real-device pause fix. Later flowing-body tests were required to expose deeper stalls.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Oct 21",
+      "iso": "2026-10-21",
+      "kind": "recovery",
+      "title": "Turn off extra application pacing",
+      "stat": {
+        "v": "63.078 → 3.159 s",
+        "l": "slowest first byte: pacing on stopped after 49 pages, pacing off finished 100/100"
+      },
+      "more": "Slow navigations 10 → 0 · canonical default-off replay: 100 pages, none paused 5 s or more, max 2.717 s",
+      "meaning": "A major recovery without raising memory budgets. It was not a powered speed cohort, and pacing was not the only cause.",
+      "commits": [
+        "4e99435f25cb8134ca11e46c54f7a62f0267b805"
+      ],
+      "meters": {
+        "fixed": {
+          "l": "100-page browsing test"
+        }
+      },
+      "index": 34,
+      "id": "e-oct-21",
+      "month": "oct",
+      "isoEnd": null,
+      "change": "Disable extra application pacing; retain delivery-window resizing",
+      "measured": "A pacing-on confirmation run completed <b>49 HTML</b>, with <b>10 slow navigations</b>, max first byte <b>63.078 s</b>, before failure; pacing-off completed <b>100/100</b>, zero slow, max <b>3.159 s</b>. Canonical default-off replay: <b>100 pages</b>, zero ≥5-s pauses, max <b>2.717 s</b>; post-sync explicit-gate run max <b>3.094 s</b>.",
+      "suites": "A major synthetic functional recovery <b>without raising memory budgets</b>. Drain-only removal still failed. These were not a statistically powered same-source speed cohort; later SDK/cold-flow failures showed that pacing was not the only cause. Window-resizing correctness remains independently required.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Oct 21–23",
+      "iso": "2026-10-21",
+      "kind": "groundwork",
+      "title": "Back off provider discovery instead of retrying blindly",
+      "stat": null,
+      "meaning": "Control-plane load and availability work, separate from the packet pacing above. No measured speed gain.",
+      "commits": [
+        "ae6988d6374657e6bd63a6c33bb3425b7645acb9",
+        "de1f7829a3844c0a88bfa632d393c38fd29d91f3",
+        "840c801fcf2d243037a1eb95e5c037f010cb80e8",
+        "4ac950b33e028b426627a9e8bcee8e5b26ce2f3d"
+      ],
+      "index": 35,
+      "id": "e-oct-21-23",
+      "month": "oct",
+      "isoEnd": "2026-10-23",
+      "change": "Discovery retry pacing and bounded live demand",
+      "measured": "Unproductive expansion backs off instead of repeatedly minting identities; admitted/lost exits or network changes end the wait. Later fixes preserve pending demand and healthy-window selection.",
+      "suites": "Control-plane load/availability work. Do not confuse discovery backoff with the packet-byte pacing disabled above. No qualified PERFVAR/Fast.com gain is recorded for discovery backoff.",
+      "evidence": [
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        }
+      ]
+    },
+    {
+      "date": "Oct 22",
+      "iso": "2026-10-22",
+      "kind": "observation",
+      "title": "Check single hosted phone-profile cells",
+      "stat": {
+        "v": "28.54 / 32 MiB",
+        "l": "peak in a Wi-Fi iOS-profile cell, with a Fast median of 13 Mbps"
+      },
+      "more": "Android 64 MiB cell: peak 39.03 / 64 MiB, Fast 40/84/13 Mbps, median 40",
+      "meaning": "Single observations, not paired A/Bs. They do not show that a doubled budget made Android faster.",
+      "meters": {
+        "bulk": {
+          "points": [
+            {
+              "v": 13,
+              "l": "Fast median, iOS-profile cell"
+            },
+            {
+              "v": 40,
+              "l": "Fast median, Android 64 MiB cell"
+            }
+          ]
+        }
+      },
+      "index": 36,
+      "id": "e-oct-22",
+      "month": "oct",
+      "isoEnd": null,
+      "change": "Individual hosted mobile-profile cells",
+      "measured": "One Wi-Fi iOS-surrogate cell: peak <b>28.54/32 MiB</b>, Fast median <b>13 Mbps</b>. Separate Android64 cell: peak <b>39.03/64 MiB</b>, Fast <b>40/84/13 Mbps</b>, median <b>40</b>.",
+      "suites": "Individual memory/speed observations, <b>not paired budget A/Bs</b> and not complete profile qualification. They do not show that doubling the budget caused the faster Android result.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Oct 24",
+      "iso": "2026-10-24",
+      "kind": "recovery",
+      "title": "Pick providers by service health and fix SYN custody",
+      "stat": {
+        "v": "5.675 → 3.566 s",
+        "l": "first byte of page 1 in one combined recovery replay"
+      },
+      "more": "All-page median 1.136 → 0.982 s · canonical v2 SDK100: median, p95 and max 0.858, 2.066 and 3.780 s, no page 5 s or more",
+      "meaning": "A meaningful recovery of this synthetic workload. The bundle was not an isolated A/B, and v1 and v2 results are not pooled.",
+      "commits": [
+        "897b2321386bb299114e80629d88b0bcb1fa436b",
+        "e90d59eb404f973dba6e9d0689ecd94e2718c10e",
+        "2779eec9045ea8ee54e0ba0744f8ccad902f02e8",
+        "ac162a0f10ad3e7b260e18d34ab77f1ae22a98ad"
+      ],
+      "meters": {
+        "fixed": {
+          "l": "SDK100 pages under 5 s"
+        }
+      },
+      "index": 37,
+      "id": "e-oct-24",
+      "month": "oct",
+      "isoEnd": null,
+      "change": "Service-aware affinity, healthy-window selection, cancellation and SYN-custody fixes",
+      "measured": "One combined recovery replay: page-1 first byte <b>5.675→3.566 s</b>, all-page median <b>1.136→0.982 s</b>, zero ≥5-s pages. Later canonical v2 SDK100: median/p95/max <b>0.858/2.066/3.780 s</b>, <b>100 HTML/400 assets/99 overlaps</b>, zero ≥5-s pages.",
+      "suites": "Meaningful functional recovery of the named synthetic workload. The candidate bundle was not an isolated affinity A/B; v1/v2 workload changes prevent pooling results. Refused SYN offers must not start provider-silence clocks; that causal fix is not attribution of the observed physical DNS delay.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    },
+    {
+      "date": "Oct 24",
+      "iso": "2026-10-24",
+      "kind": "observation",
+      "title": "The latest phone cell",
+      "stat": {
+        "v": "545.7 ms",
+        "l": "median Wikipedia load in a physical H1 iOS-profile cell (first byte 206.2 ms)"
+      },
+      "more": "Peak, quiet and teardown 29.301, 24.262 and 23.363 MiB, no 32 MiB breach · first page 33.044 s, including DNS 18.103 s · Fast 32 and 9.9 Mbps; the third attempt timed out",
+      "meaning": "It passed sampled memory but failed workload eligibility, and 111 of 112 other cells were not run. The median hides a cold pause.",
+      "meters": {
+        "load": {
+          "points": [
+            {
+              "v": 545.7,
+              "l": "latest phone cell",
+              "src": "phone",
+              "final": true
+            }
+          ]
+        },
+        "bulk": {
+          "points": [
+            {
+              "v": 32,
+              "l": "Fast, latest phone cell"
+            },
+            {
+              "v": 9.9,
+              "l": "Fast, latest phone cell"
+            }
+          ]
+        }
+      },
+      "index": 38,
+      "id": "e-oct-24-2",
+      "month": "oct",
+      "isoEnd": null,
+      "change": "Latest retained physical H1 iOS-surrogate cell",
+      "measured": "Peak/quiet/teardown <b>29.301/24.262/23.363 MiB</b>, zero observed 32-MiB breaches; Wikipedia median TTFB/load <b>206.2/545.7 ms</b>. The first page took <b>33.044 s</b>, including reported DNS <b>18.103 s</b>. Fast valid displays <b>32, 9.9 Mbps</b>; the third attempt timed out.",
+      "suites": "This cell passed sampled memory but <b>failed workload eligibility</b>; <b>111/112</b> other cells were not run. Medians hide the cold pause. Neither Android64 nor complete iOS32 qualification follows.",
+      "evidence": [
+        {
+          "label": "PERFVAR measurement ledger",
+          "private": true
+        }
+      ]
+    }
+  ],
+  "kinds": {
+    "gain": {
+      "label": "Gain",
+      "legend": "measured and kept"
+    },
+    "recovery": {
+      "label": "Recovery",
+      "legend": "a stall or failure fixed"
+    },
+    "observation": {
+      "label": "Observation",
+      "legend": "a phone or public measurement, not an A/B"
+    },
+    "mixed": {
+      "label": "Mixed",
+      "legend": "helped in one case, hurt in another"
+    },
+    "rejected": {
+      "label": "Rejected",
+      "legend": "measured and not adopted, or no change"
+    },
+    "groundwork": {
+      "label": "Groundwork",
+      "legend": "correctness, policy or measurement, no speed claim"
+    }
+  },
+  "meters": [
+    {
+      "key": "load",
+      "name": "Page load",
+      "tag": "latest median",
+      "unit": "ms",
+      "short": "Load"
+    },
+    {
+      "key": "bulk",
+      "name": "Bulk speed",
+      "tag": "controlled H1",
+      "unit": "Mbps",
+      "short": "Bulk"
+    },
+    {
+      "key": "path",
+      "name": "Packet path",
+      "tag": "never multiplied",
+      "unit": "speed-ups",
+      "short": "Path"
+    },
+    {
+      "key": "memory",
+      "name": "Memory",
+      "tag": "never summed",
+      "unit": "reductions",
+      "short": "Memory"
+    },
+    {
+      "key": "fixed",
+      "name": "Recoveries",
+      "tag": "count",
+      "unit": "stalls fixed",
+      "short": "Fixed",
+      "proposed": true
+    }
+  ],
+  "methods": [
+    {
+      "title": "Profile and measure the actual owners",
+      "text": "Go allocation/heap/goroutine investigations, packet-root accounting, queue high-water/drop counters, GC cycles/CPU and process measurements distinguished live payload, free-list retention, allocator slack, goroutine topology and stale references. Memory measurements kept heap, Go runtime, RSS and iOS kernel footprint separate. Source-level capacity arithmetic was checked against actual retained roots.",
+      "key": "owners",
+      "heading": "Find out what actually holds the memory",
+      "plain": "Split memory and time by what actually owns them before changing anything, so a fix targets what is really there.",
+      "seen": [
+        6,
+        31,
+        32
+      ],
+      "alt": "A heap bar splits into its owners; the stale reader is highlighted and released while the rest stays.",
+      "caption": "Schematic. The Oct 19 fix released readers that closed endpoints kept alive: one matched diagnostic’s warm-heap spread fell from 7.86 to 0.54 MiB."
+    },
+    {
+      "title": "Find the limiting boundary, not merely the slow request",
+      "text": "Packet/ACK lineage, per-lane resend and cumulative/selective ACK counters, TCP/TLS/request timing, provider selection receipts and browser CDP/NavigationTiming located pauses before admission, during carrier/queue transit, at TCP establishment or in DNS. Missing instrumentation was classified as unknown, not proof of a zero or a stall.",
+      "key": "boundary",
+      "heading": "Find where the time goes",
+      "plain": "Trace a slow request stage by stage to find where the time goes. A stage with no instrumentation is unknown, not zero.",
+      "seen": [
+        2,
+        29,
+        38
+      ],
+      "alt": "A request moves through DNS, TCP, admission, carrier and reply; a waterfall shows most of the time at DNS and one stage hatched as unknown.",
+      "caption": "Schematic. In the latest phone cell the first page took 33.044 s, 18.103 s of it in DNS; how the rest divides is drawn for illustration."
+    },
+    {
+      "title": "Reproduce mechanisms deterministically",
+      "text": "Fixed clocks (<code>synctest</code>), held queues/receipts, exact refused admissions, controlled ACK/body-release barriers, loss injection and old-code counterfactuals pinned the causal invariant. Tests covered cancellation, sequence wrap, SYN/FIN/RST generations, legacy peers, sibling flows, zero/shared budgets and returned ownership. Normal and race modes catch different failure classes.",
+      "key": "deterministic",
+      "heading": "Make failures repeat exactly",
+      "plain": "Run the code on a fixed clock with held queues, so a failure lands on the same tick every run and the fix can be proven against the old code.",
+      "seen": [
+        28,
+        33,
+        25
+      ],
+      "alt": "Three runs of the old code on a fixed clock fail on the same tick; the fix passes on that tick.",
+      "caption": "Schematic. A fixed clock (Go’s synctest), held queues and exact barriers pin each step, and the old code stays as the counterfactual."
+    },
+    {
+      "title": "Use ablations and negative controls",
+      "text": "Change only pacing, only drains, only window sizing, only allocation ownership or only a buffer rule. Keep failed candidates and compare against old behavior. Examples include the failed drain-only browsing treatment, the root-depth increase that removed drops without increasing speed, and the socket change that helped a synthetic floor but hurt a realistic profile.",
+      "key": "ablation",
+      "heading": "Change one thing at a time",
+      "plain": "Change one factor at a time against the old behavior, and keep the treatments that failed in the record.",
+      "seen": [
+        34,
+        2,
+        12
+      ],
+      "alt": "Toggles for pacing, drain and window resizing; only turning off pacing lets the 100-page test finish.",
+      "caption": "From the Oct 21 entry: with pacing on the run stopped after 49 pages, removing only the drain still failed, and with pacing off it finished 100 of 100. Window resizing stayed."
+    },
+    {
+      "title": "Measure several layers",
+      "text": "Microbenchmarks isolate cost/op and allocations; real localhost TCP/TLS and native RPC measure carrier work; full-TUN/provider simulators test composition under seeded bandwidth/RTT/jitter/loss/MTU/outage; Android browser runs exercise Wikipedia/Fast.com on Wi-Fi/cellular. None substitutes for the next layer. Linux kernel/socket conclusions require the corresponding Linux fixture.",
+      "key": "layers",
+      "heading": "Measure at every layer",
+      "plain": "A gain in a microbenchmark is a question for the carrier, the simulator and the phone. Each layer gets its own measurement.",
+      "seen": [
+        3,
+        21,
+        12,
+        15
+      ],
+      "alt": "Four stacked layers from microbenchmark to phone; a gain at the socket does not carry to the full-tunnel simulator.",
+      "caption": "From the Sep 22 SIMD masking test: +3.52% at the socket, no established gain in the complete PERFVAR run, so it was not adopted."
+    },
+    {
+      "title": "Balance comparisons and quantify noise",
+      "text": "Same-binary switches, immutable source overlays, alternating/interleaved fresh-process blocks and baseline/candidate/candidate/baseline order reduce drift. A/A estimates establish detectable effects. Paired ratios, bootstrap intervals, exact tests and multiplicity correction are used where the cohort supports them; pilots and one-off passes remain explicitly weaker evidence.",
+      "key": "noise",
+      "heading": "Measure the noise first",
+      "plain": "Interleave old and new runs in fresh processes, and run identical code against itself, so a small difference has to beat measured noise before it counts.",
+      "seen": [
+        1,
+        11,
+        13
+      ],
+      "alt": "Two runs of identical code define a noise band; one candidate falls inside it, another beyond it.",
+      "caption": "Schematic. On identical code, an A/A check flagged 15 of 17 cells at five repetitions, so earlier small verdicts were retired."
+    },
+    {
+      "title": "Treat evidence validity as part of the test",
+      "text": "Preserve useful-byte hashes, exact attempt counts, failed/calibration-invalid rows, source/toolchain identities and raw artifacts. Join background workers and process groups before final memory accounting. Do not force GC to create a steady-memory pass, silently extend deadlines, discard bad providers after seeing results, or compare only successful tail samples. CPU reductions are energy hypotheses until actual energy is measured.",
+      "key": "validity",
+      "heading": "Keep every result, failures included",
+      "plain": "Keep every attempt, failed and invalid runs included, check the bytes delivered, and never drop bad runs to improve a median.",
+      "seen": [
+        19,
+        18,
+        29,
+        15
+      ],
+      "alt": "Ten runs, three of them failed; dropping the failures would lower the median, so the median counts every attempt.",
+      "caption": "Schematic. Failed and calibration-invalid rows stay in the record, deadlines are never silently extended, and bad providers are not dropped after the results are seen."
+    }
+  ],
+  "end": [
+    {
+      "axis": "Page load",
+      "figure": "≈4.7–7.3×",
+      "what": "faster median Wikipedia load (79–86% less time): from 2,552.3 or 3,967.8 ms on Aug 24 to 545.7 ms on Oct 24",
+      "confidence": "Low. A historical observation across two different starting workloads, not a confidence interval or a causal A/B. The latest cell still had a 33-second cold first page.",
+      "row": 0,
+      "report": {
+        "axis": "Representative real Wikipedia load",
+        "evidence": "Aug 24 explicit-H1 control <b>2,552.3 ms</b>, or the low-bar bundled baseline <b>3,967.8 ms</b>; latest Oct 24 physical cell median <b>545.7 ms</b>.",
+        "estimate": "<b>Approximately 4.7–7.3× faster median loading (79–86% less time)</b> as a historical observation. This range reflects two different starting workloads, <b>not a confidence interval or causal A/B</b>. Providers, builds, profiles and memory limits differ; the latest cell still had a 33-second cold-page stall. Treat this as a low-confidence user-visible estimate, not a release guarantee."
+      }
+    },
+    {
+      "axis": "Bulk speed",
+      "figure": "≈6.7×",
+      "what": "recovery on the controlled H1 path: about 6.1 Mbps, then 38, 41 and 52 Mbps after the handoff fix",
+      "confidence": "Stronger mechanism evidence than public-route comparisons, but not the net gain of every change through October. Public speeds still vary.",
+      "row": 1,
+      "report": {
+        "axis": "Controlled H1 bulk recovery",
+        "evidence": "Aug 25 exact-provider drop-prone path about <b>6.1 Mbps</b>, corrected handoffs <b>38/41/52 Mbps</b>, median <b>41</b>.",
+        "estimate": "Approximately <b>6.7×</b> recovery in that historical experiment; stronger mechanism evidence than public-route comparisons. It is <b>not</b> the net gain from every change through October. Current public speed remains variable and failed/incomplete cells remain."
+      }
+    },
+    {
+      "axis": "Adaptive windows",
+      "figure": "≈4.73×",
+      "what": "faster in the adaptive-window model, 202.752 to 958.259–958.362 Mbps, and gigabit-class on a local TCP path: 939–942 Mbps sustained after startup, about 942–943 Mbps in larger-buffer controls",
+      "confidence": "Measured on a host-local TCP path (kernel sockets, provider NAT, Transfer, gVisor and TUN), not on a phone or a public provider. Some host comparisons were calibration-censored or slow, and they stay in the record.",
+      "milestone": true
+    },
+    {
+      "axis": "Packet path",
+      "figure": "2.81× · 2.02× · 1.19–1.36×",
+      "what": "grouped provider sends, the Framer singleton path and the H1+ carrier, each measured alone",
+      "confidence": "Bounded and reproducible. They overlap in the pipeline and must not be multiplied; their combined effect on page load, Fast.com or battery is not identifiable.",
+      "row": 2,
+      "report": {
+        "axis": "Local packet/carrier efficiency",
+        "evidence": "Grouping <b>2.81×</b> drain throughput; Framer singleton <b>2.02×</b>; production H1+ <b>1.19–1.36×</b> paired carrier throughput, depending on direction.",
+        "estimate": "These are bounded, reproducible component gains. They overlap in the pipeline and <b>must not be multiplied</b>. Without matching start/end whole-stack profiles, their combined contribution to page load, Fast.com or battery life is not identifiable."
+      }
+    },
+    {
+      "axis": "Memory",
+      "figure": "−26.4% · −7.5% · −93.1%",
+      "what": "retained-byte accounting, the shared provider UDP lifecycle and the released TCP readers",
+      "confidence": "Different owners and workloads, so there is no common total. The larger 32 and 64 MiB budgets are not an efficiency gain.",
+      "row": 3,
+      "report": {
+        "axis": "Memory efficiency",
+        "evidence": "Historical retained-byte repair <b>29.59→21.77 MiB (−26.4%)</b>; shared UDP host runtime <b>−7.5%</b>; stale-reader warm-heap spread <b>−93.1%</b> in its matched diagnostic.",
+        "estimate": "Different owners and workloads, so no common “total memory saved.” Current <b>32/64-MiB</b> limits deliberately permit more useful work than the old 24-MiB profile. A higher later runtime does not by itself negate an allocation fix, and a larger cap is not a memory-efficiency gain."
+      }
+    },
+    {
+      "axis": "Recoveries",
+      "figure": "8",
+      "what": "stalls and failures fixed, from H1 handoff drops in August to pages over 5 s in the 100-page test in October",
+      "confidence": "Each is a functional recovery in its own named workload. None is a speed multiplier. (This card is proposed in D1; the report has no such row.)",
+      "proposed": true,
+      "report": null
+    },
+    {
+      "axis": "The whole app",
+      "figure": "No single number",
+      "what": "No same-source start-to-end campaign spans the period. Several campaigns failed or stopped, and the measurement protocol changed.",
+      "confidence": "The research supports large local gains and recovered functionality, not a claim that the whole app is a fixed percentage faster or that every final gate passes.",
+      "row": 4,
+      "none": true,
+      "report": {
+        "axis": "Aggregate PERFVAR / LOWBAR / MEMSTEADY score",
+        "evidence": "No same-source-compatible start/end complete campaign spans the whole period. Several campaigns failed or stopped; the measurement protocol evolved.",
+        "estimate": "<b>No defensible aggregate percentage.</b> The report supports large local gains and recovered functionality, not a claim that the entire app is a fixed percentage faster or that all final gates pass."
+      }
+    }
+  ],
+  "instruments": [
+    {
+      "name": "LOWBAR",
+      "text": "constrained-rate, MTU, loss, mixed-route and fixed-offer cases now check useful delivery, retransmission/wire cost and finite queues, rather than only clean-path bulk speed.",
+      "plain": "Constrained links are now judged by useful delivery, wasted resends and finite queues, not only clean-path speed."
+    },
+    {
+      "name": "PERFVAR",
+      "text": "scenario identity and A/A noise matter; every scheduled attempt and failed/calibration-invalid arm remains in the record. Five repeats cannot automatically establish a small gain. Loaded-probe cohorts must settle through their own deadlines rather than be silently discarded when bulk completes.",
+      "plain": "Every scheduled attempt stays in the record, and noise is measured before a small gain counts."
+    },
+    {
+      "name": "MEMSTEADY",
+      "text": "Go soft limits and logical credit are not observed runtime caps. Startup, traffic, quiet, drain and joined teardown all count. The current iOS surrogate is tested on allowlisted Android phones at <b>32 MiB</b>, while normal Android is independently tested at <b>64 MiB</b>. A later low sample cannot erase an earlier breach.",
+      "plain": "Memory is measured through startup, traffic, quiet, drain and teardown, and a later low sample never erases an earlier breach."
+    },
+    {
+      "name": "Browsing",
+      "text": "tests evolved from sequential/easy pages to 100 pages of 50–300 KiB with real HTML/assets, unfinished bodies and overlapping navigation, then actual SDK/public-provider recovery and verified inner TLS/H2. Those fixture generations are distinct measurements, not interchangeable score rows.",
+      "plain": "Page tests grew from easy sequential pages to 100 real pages with assets, unfinished bodies and overlapping navigation."
+    }
+  ],
+  "kpis": [
+    {
+      "v": "≈4.73×",
+      "l": "faster with adaptive windows in their model, 202.752 to 958.259–958.362 Mbps; 939–943 Mbps of useful payload on a 1-Gbps local test path"
+    },
+    {
+      "v": "4.7–7.3×",
+      "l": "faster median Wikipedia load, from the Aug 24 baselines to the latest phone cell"
+    },
+    {
+      "v": "6.7×",
+      "l": "controlled H1 bulk recovery, from about 6.1 to 41 Mbps"
+    },
+    {
+      "v": "2.81×",
+      "l": "the largest packet-path gain, sending a provider’s packets as one group"
+    },
+    {
+      "v": "−26.4%",
+      "l": "runtime memory in an exact physical replay, 29.59 to 21.77 MiB"
+    },
+    {
+      "v": "8",
+      "l": "stalls and failures fixed",
+      "proposed": true
+    }
+  ],
+  "glossary": [
+    [
+      "A/A test",
+      "Running identical code against itself. The spread of its results is the noise a real difference has to beat."
+    ],
+    [
+      "ACK",
+      "An acknowledgment: the receiver’s signal that data arrived, so the sender can move on instead of resending."
+    ],
+    [
+      "ACK compression",
+      "Acknowledgments that arrive bunched together after a delay, so the sender learns of delivered data later than the path’s travel time alone would suggest."
+    ],
+    [
+      "Admission",
+      "Accepting new traffic only when the memory budget has room for it."
+    ],
+    [
+      "Carrier",
+      "A connection that carries URnetwork traffic between a device and the network, such as H1, H3 or P2P."
+    ],
+    [
+      "Connect",
+      "URnetwork’s open source networking library, which carries traffic between clients and providers."
+    ],
+    [
+      "Drain",
+      "Taking every queued packet off a queue in one pass."
+    ],
+    [
+      "Fast.com",
+      "A public download speed test, run here in a phone’s browser."
+    ],
+    [
+      "Framer",
+      "The format that marks where each message starts and ends on a carrier. FramerXL is the variant for large device RPC frames."
+    ],
+    [
+      "GC",
+      "Garbage collection: Go reclaiming memory that is no longer used. GOGC and the soft limit set how often and how hard it works."
+    ],
+    [
+      "Goroutine",
+      "A lightweight Go thread. Each one holds memory, so fewer is cheaper."
+    ],
+    [
+      "gVisor",
+      "An open source user-space network stack. Connect runs TCP/IP in it on the device."
+    ],
+    [
+      "H1",
+      "The carrier family over TLS, WebSocket and TCP, which passes through ordinary web infrastructure."
+    ],
+    [
+      "H1+",
+      "An upgrade inside H1 that sends the Framer format straight over the TLS stream, with a plain WebSocket as the fallback."
+    ],
+    [
+      "H3",
+      "The carrier family over QUIC."
+    ],
+    [
+      "iOS profile",
+      "The 32 MiB memory budget that stands in for an iPhone network extension, tested on allowlisted Android phones."
+    ],
+    [
+      "LOWBAR",
+      "The test suite for constrained links: delivery and latency at low rates, small MTU, loss and mixed routes."
+    ],
+    [
+      "Median",
+      "The middle value of a set of measurements."
+    ],
+    [
+      "MEMSTEADY",
+      "The test suite for memory over time: runtime peaks, quiet behavior, teardown and which code owns the memory."
+    ],
+    [
+      "MiB",
+      "A mebibyte, 1,048,576 bytes."
+    ],
+    [
+      "Model Mbps",
+      "A rate measured in a virtual-time model of the path rather than on real sockets. It shows that a mechanism works, not what a device gets."
+    ],
+    [
+      "NAT",
+      "Network address translation: mapping between private and public addresses, here on the provider."
+    ],
+    [
+      "P2P",
+      "A direct carrier between two devices."
+    ],
+    [
+      "p95",
+      "The value that 95% of the measurements stay at or below."
+    ],
+    [
+      "Pacing",
+      "Spacing packets out over time instead of sending them as soon as they are ready."
+    ],
+    [
+      "Pack",
+      "A Connect message that carries one or more packets on the wire."
+    ],
+    [
+      "PERFVAR",
+      "The performance suite: throughput, latency, wire and retransmission cost, correctness and calibration, scenario by scenario."
+    ],
+    [
+      "Provider",
+      "A device that shares its connection with the network. Traffic leaves the network through it."
+    ],
+    [
+      "PTO",
+      "Probe timeout: the point where a TCP sender stops waiting and probes for lost data."
+    ],
+    [
+      "Race mode",
+      "A Go build with the race detector on. It runs slower and catches data races."
+    ],
+    [
+      "RPC",
+      "Remote procedure call. Device RPC is the SDK’s local channel between the app and its network service on the same device."
+    ],
+    [
+      "RTT",
+      "Round-trip time: how long a message takes to get there and back."
+    ],
+    [
+      "SDK",
+      "The URnetwork software kit that the apps build on. It runs Connect on the device."
+    ],
+    [
+      "SYN",
+      "The first packet of a new TCP connection."
+    ],
+    [
+      "synctest",
+      "Go’s test package that runs code on a fake clock, so the timing is identical on every run."
+    ],
+    [
+      "TTFB",
+      "Time to first byte: how long until the first byte of a response arrives."
+    ],
+    [
+      "TUN",
+      "A virtual network interface. Full-TUN tests send traffic through the whole tunnel."
+    ],
+    [
+      "WebSocket masking",
+      "The XOR scrambling a WebSocket client must apply to everything it sends."
+    ],
+    [
+      "Window",
+      "How much data may be in flight before the sender waits for an acknowledgment. cwnd is the congestion window."
+    ]
+  ],
+  "open": [
+    {
+      "title": "The cold first page",
+      "text": "In the latest phone cell the first page took 33.044 s, 18.103 s of it in DNS. Medians hide that pause, and the cold-connection and device pause investigation is still open."
+    },
+    {
+      "title": "The phone-profile matrix",
+      "text": "The complete physical matrix, 32 MiB for the iOS profile and 64 MiB for Android, is not qualified. In the latest run, 111 of 112 cells were not run, and a single memory pass or a fast public exit does not qualify it."
+    },
+    {
+      "title": "The full campaign",
+      "text": "The complete correctness and PERF campaign has not been qualified. Source changes interrupted later qualification, and interrupted or source-invalid runs get no performance credit."
+    },
+    {
+      "title": "A native iPhone",
+      "text": "There is no native-iPhone evidence for the requested extension lifetime footprint under 50 MiB. Android and host tests cannot supply it."
+    },
+    {
+      "title": "Two open investigations",
+      "text": "The cold-destination and provider-admission comparison, and an independent encoding and pool-ownership investigation."
+    },
+    {
+      "title": "Battery",
+      "text": "Every CPU reduction here is an energy hypothesis until energy is measured. No battery improvement is claimed."
+    }
+  ],
+  "latest": "After the October 24 entries, a warm 100-page synthetic run over HTTP/2 passed ten component roots and one full 100-page run, in normal and in race mode, with joined cleanup and no pause of 5 s or more. Normal median, p95 and max were 0.949, 1.905 and 2.749 s; the race-mode max was 3.364 s. It is a warm four-origin cell-edge test (5/1 Mbps, 120 ms base RTT, jitter and loss), not a public Wi-Fi comparison, a cold-provider test or a memory qualification.",
+  "summary": "the research substantially reduced per-packet work and restored several stalled paths; representative page-load medians improved by roughly five to seven times across recorded device observations, but cold pauses, public-provider variance and incomplete final qualification prevent treating that as a universal net product gain.",
+  "commits": {
+    "4e99435f25cb8134ca11e46c54f7a62f0267b805": "Disable extra application pacing while preserving delivery windows",
+    "ae6988d6374657e6bd63a6c33bb3425b7645acb9": "Pace discovery window expansion after unproductive passes",
+    "de1f7829a3844c0a88bfa632d393c38fd29d91f3": "End discovery pacing on network changes and lost exits",
+    "840c801fcf2d243037a1eb95e5c037f010cb80e8": "Reuse discovery window identities that no provider has seen",
+    "4ac950b33e028b426627a9e8bcee8e5b26ce2f3d": "Recover bounded provider discovery demand and packet ingress",
+    "897b2321386bb299114e80629d88b0bcb1fa436b": "Fix cross-window service recovery and H1 migration ownership",
+    "e90d59eb404f973dba6e9d0689ecd94e2718c10e": "Respect service failures and healthy windows in fresh-flow selection",
+    "2779eec9045ea8ee54e0ba0744f8ccad902f02e8": "Release retired provider generations from service failure cache",
+    "ac162a0f10ad3e7b260e18d34ab77f1ae22a98ad": "Tie dial-failure inference to accepted SYN custody"
+  },
+  "mission": {
+    "aim": "Give everyone the best encryption and the best speed, for everyday use, that makes your internet better.",
+    "lede": "UR’s research has one aim: to give everyone the best encryption and the best speed, for everyday use, that makes your internet better. From August 24 to October 24, 2026, that work measured 39 changes and experiments in Connect, the SDK and the server packet path. This report puts each one on a timeline with what it measured, follows how far each kind of gain went, and explains how the research was done.",
+    "title": "The best encryption and the best speed, without the tradeoff",
+    "body": [
+      "Encryption is not what gets traded away. The speed has to come from doing the work better: less work for every packet, less memory on the phone, and no stalls. Someone using the network should only notice that the internet works.",
+      "Each meter on this page follows one part of that, as it is felt in everyday use."
+    ],
+    "items": [
+      {
+        "meter": "load",
+        "headline": "Pages open without waiting",
+        "body": "The median Wikipedia load went from 2,552.3 or 3,967.8 ms on Aug 24 to 545.7 ms in the latest phone cell, a historical observation rather than an A/B."
+      },
+      {
+        "meter": "bulk",
+        "headline": "Full speed for streams and downloads",
+        "body": "Adaptive windows took a local TCP path to gigabit-class delivery, 939–942 Mbps sustained, and the controlled H1 phone path recovered from about 6.1 Mbps to Fast.com runs of 38, 41 and 52 Mbps."
+      },
+      {
+        "meter": "path",
+        "headline": "Encrypted traffic that costs less work",
+        "body": "The carriers that move encrypted traffic do less work per packet: grouped sends 2.81×, the Framer’s single-frame path 2.02×, H1+ 1.19–1.36×, each measured alone; adaptive windows (≈4.73× in their model) keep a fast path full."
+      },
+      {
+        "meter": "memory",
+        "headline": "Light enough for a phone",
+        "body": "A phone gives the network a small memory budget, 32 MiB in the iOS profile and 64 MiB on Android. Fixes like the retained-byte accounting (−26.4%) keep the work inside it."
+      },
+      {
+        "meter": "fixed",
+        "headline": "No stalls to notice",
+        "body": "Eight stalls and failures were fixed, from dropped H1 handoffs in August to pages that paused 5 s or more in October."
+      }
+    ],
+    "open": "It is not finished: the cold first page and the full phone qualification are still open."
+  },
+  "milestone": {
+    "eyebrow": "Milestone",
+    "headline": "Gigabit-class throughput with adaptive windows",
+    "lede": "Adaptive window resizing took the network’s local TCP path to gigabit-class delivery: 939–942 Mbps of useful payload, sustained after startup on a path with 1-Gbps service, and about 942–943 Mbps in larger-buffer controls. It replaced a fixed window with one sized to what is actually delivered, and repaired the feedback that keeps a fast path full.",
+    "scope": "It is host-local evidence, not a claim that every phone or public provider delivers gigabit service. Window resizing is still on by default: turning off the extra pacing in October did not remove it.",
+    "stats": [
+      {
+        "v": "939–942 Mbps",
+        "l": "sustained after startup: the host TCP path, 100 ms, eight flows"
+      },
+      {
+        "v": "≈4.73×",
+        "l": "the ACK-residence correction: 202.752 → 958.259–958.362 model Mbps"
+      },
+      {
+        "v": "942–943 Mbps",
+        "l": "final larger-buffer capacity controls, including a single-flow upload"
+      },
+      {
+        "v": "4.055 → 958.075",
+        "l": "model Mbps after an RTT increase at 1 Gbps, against a 958.095 reference"
+      }
+    ],
+    "run": {
+      "first": 626.2,
+      "steady": [
+        939,
+        942
+      ],
+      "seconds": 10,
+      "mean": 908.9,
+      "service": 1000,
+      "caption": "The host TCP path, 100-ms eight-flow upload: 626.2 Mbps in the first measured second, then 939–942 Mbps for each of the next nine; the ten-second mean was 908.9 Mbps. The startup second stays in the record and is not the steady rate."
+    },
+    "report": {
+      "title": "Gigabit throughput milestone: adaptive window resizing",
+      "intro": [
+        "<b>Achieving gigabit-class delivery was a major result of this research.</b> The work replaced a fixed-window bottleneck with delivery-sized windows and repaired the feedback/ACK behavior needed to keep a fast path full. It deserves to stand alongside H1+, batching and memory retention as a headline improvement, rather than appear only as an intermediate 68→85-Mbps experiment.",
+        "The result was more than an arithmetic prediction. The local TCP-path instrument—real loopback kernel origin, provider NAT, Transfer and gVisor application/TUN sockets—recorded sustained <b>939–942 Mbps</b> after startup in its 100-ms, eight-flow upload check. Final larger-buffer capacity controls recorded approximately <b>942–943 Mbps</b>, including the 100-ms single-flow upload. This is gigabit-class useful payload on the instrument's 1-Gbps path; protocol overhead and the payload accounting explain why these readings are below 1,000 Mbps. It is host-local TCP-path evidence, not a claim that every mobile device or public provider supplies gigabit Internet service."
+      ],
+      "changes": [
+        {
+          "title": "Replace the fixed window with an adaptive one",
+          "text": "Qualified delivered-byte/rate and feedback-residence evidence can grow the send window; the receiver advertises usable credit. Peer permission, explicit endpoint limits and shared memory admission remain hard bounds. A larger permitted window is not an eager allocation of that many bytes."
+        },
+        {
+          "title": "Preserve older providers",
+          "text": "A peer without a receive-window advertisement keeps the historical opening-window behavior; missing compression metadata retains the legacy 10-ms assumption. Resizing cannot grant permission beyond the peer or shared budget."
+        },
+        {
+          "title": "Account for ACK compression in sizing",
+          "text": "A fast path can still starve if the window covers propagation but not the delayed/compressed ACK interval. Sizing includes the relevant feedback residence while retransmission timing keeps its separate RTT semantics."
+        },
+        {
+          "title": "Recover after path-quality changes",
+          "text": "Ordinary evidence grows the learned window; a bounded quality-change generation permits replacement using fresh service and RTT evidence. SDK, Android, Apple, Windows and Linux hooks propagate the quality event. Repeated noise does not repeatedly renew the generation."
+        },
+        {
+          "title": "Keep window sizing separate from pacing",
+          "text": "Delivery-window resizing is still the shipping default (<code>WindowSizingFromDelivery</code>). The extra application byte-pacing layer was subsequently disabled to address browsing stalls. That later correction did <b>not</b> discard the window-resizing work or its receiver/memory guards."
+        }
+      ],
+      "table": [
+        {
+          "experiment": "ACK-residence correction, 0.3-ms path and advertised 10-ms compression",
+          "result": "<b>202.752→958.259–958.362 model Mbps</b>, about <b>4.73×</b>",
+          "establishes": "Three race-enabled mechanism checks on a 1-Gbps virtual FIFO. Both arms were explicitly held to the advertised compression interval after an earlier stimulus defect was corrected."
+        },
+        {
+          "experiment": "RTT increase during traffic, eight flows, 10-ms compression",
+          "result": "At 1 Gbps: <b>4.055→958.075 model Mbps</b>, versus <b>958.095</b> reference. At 100 Mbps: <b>7.148→95.805</b>, matching reference.",
+          "establishes": "Recovery of a severe window/feedback collapse, with every flow progressing and zero measured relay drops. This is virtual-time evidence, not a physical-device speed result."
+        },
+        {
+          "experiment": "Host TCP path, 100-ms eight-flow upload",
+          "result": "<b>626.2 Mbps</b> in the first measured second, then <b>939–942 Mbps</b> for the next nine; ten-second mean <b>908.9 Mbps</b>",
+          "establishes": "Actual local socket/NAT/TUN-path gigabit-class steady delivery. Startup is retained and must not be described as the steady rate."
+        },
+        {
+          "experiment": "Short-path SDK duplex phase study, September 23",
+          "result": "Aggregate median <b>1,499.17→1,718.06 model Mbps</b>; later short-duplex check <b>1,826.60 model Mbps</b>",
+          "establishes": "Capacity and feedback behavior of the SDK construction in a virtual-time instrument. Aggregate bidirectional throughput is not one-direction Internet throughput."
+        },
+        {
+          "experiment": "Final deterministic window matrix",
+          "result": "Minimum candidate/reference <b>99.9%</b> in the 36 RTT/flow/compression cells; <b>99.3%</b> in 108 endpoint-mismatch cells; <b>98.8%</b> in six live receiver-window changes",
+          "establishes": "The benefit was exercised across window/RTT changes and asymmetric limits, not just one large clean window."
+        }
+      ],
+      "guards": [
+        "<b>The achievement and the remaining guards both matter.</b> Some host comparisons were calibration-censored or slow; one default-buffer 100-ms single-flow upload deteriorated to 7.7 Mbps. Those failures remain in the original reports. The headline is that gigabit-class delivery was achieved and adaptive windows removed major limits—not that every rate, host, profile or later build had already passed. The 32-MiB iOS and 64-MiB Android memory qualifications remain separate, and a desktop/capacity-control window must not be assigned to a phone without its admission budget."
+      ],
+      "evidence": [
+        {
+          "label": "THROUGHPUT-PR2-RESULTS",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUT-PR2-RESULTS.md"
+        },
+        {
+          "label": "THROUGHPUT-REPORT-PR2",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUT-REPORT-PR2.md"
+        },
+        {
+          "label": "MEMSTEADY",
+          "href": "https://github.com/urnetwork/connect/blob/main/MEMSTEADY.md"
+        },
+        {
+          "label": "THROUGHPUTFIX",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUTFIX.md"
+        },
+        {
+          "label": "THROUGHPUT-REPORT",
+          "href": "https://github.com/urnetwork/connect/blob/main/THROUGHPUT-REPORT.md"
+        }
+      ]
+    }
+  }
+}

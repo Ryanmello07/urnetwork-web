@@ -57,9 +57,19 @@ export const LEGAL_ROUTES = ['terms', 'privacy', 'vdp'];
  */
 export const PAGE_ROUTES = ['about', 'investors', 'build', 'reserve', 'mainnet'];
 
+/**
+ * The research reports: English-only documents under the translated research
+ * section, each at /research/<slug> (the route name is 'research-report'), as
+ * the Investor Centre's documents are under /investors. The slug is the
+ * report's data file's (data/research-report-*.json, checked by
+ * tests/research-report.test.mjs).
+ */
+export const RESEARCH_REPORT_SLUGS = ['2026-q3-report'];
+
 const SECTION_SET = new Set(SECTION_ROUTES);
 const LEGAL_SET = new Set(LEGAL_ROUTES);
 const PAGE_SET = new Set(PAGE_ROUTES);
+const REPORT_SET = new Set(RESEARCH_REPORT_SLUGS);
 // route names with translated pages: '/' is home, '/miners' is miners, …
 const TRANSLATED_SET = new Set(LOCALIZED_BASE_PATHS.map(path => (path === '/' ? 'home' : path.slice(1))));
 
@@ -75,6 +85,9 @@ export function parseRoute(pathname) {
     // Strip leading slash and trailing slash for matching.
     const bare = rest.replace(/^\//, '').replace(/\/$/, '');
     if (SECTION_SET.has(bare)) return { name: bare, slug: null };
+    if (bare.startsWith('research/') && REPORT_SET.has(bare.slice('research/'.length))) {
+        return { name: 'research-report', slug: bare.slice('research/'.length) };
+    }
 
     // English-only pages resolve under a language prefix too, like the docs:
     // /de/about is the English /about.
@@ -102,6 +115,7 @@ export function buildPath(route, lang) {
     const prefix = lang && lang !== 'en' && isTranslatedRoute(route) ? `/${lang}` : '';
     if (!route || route.name === 'home') return prefix || '/';
     if (SECTION_SET.has(route.name)) return `${prefix}/${route.name}`;
+    if (route.name === 'research-report') return `/research/${route.slug}`;
     if (route.name === 'docs') {
         return route.slug ? `/docs/${route.slug}` : '/docs';
     }

@@ -159,6 +159,26 @@ function withLink(text, placeholder, href, label, className) {
 }
 
 /**
+ * The research report's card, under the page's intro: the latest report, as a
+ * link to its page. The report is English-only, so the card links the English
+ * page from every language, and the translations' call to action says so.
+ * The path is the report's (router RESEARCH_REPORT_SLUGS).
+ */
+export const RESEARCH_REPORT_HREF = '/research/2026-q3-report';
+
+export function ResearchReportCard({ t }) {
+    const r = t.research.report;
+    return (
+        <a className="research-report-card" href={RESEARCH_REPORT_HREF}>
+            <span className="research-report-card-tag">{r.tag} · {r.date}</span>
+            <h2 className="research-report-card-title">{r.title}</h2>
+            <p className="research-report-card-body">{r.body}</p>
+            <span className="research-report-card-cta">{r.cta} <span aria-hidden="true">→</span></span>
+        </a>
+    );
+}
+
+/**
  * The algorithm areas, one native <details> each. Closed: the tag, the title
  * and the one-line body (the former card). Open: the current approach, the
  * implementation links and the research directions. The summary carries the

@@ -240,6 +240,14 @@ operators: {
         metaTitle: 'Investigación: algoritmos, datos y auditorías abiertos — UR',
         metaDescription: 'Investigación abierta de UR: algoritmos de enrutamiento, matching, transferencia y recompensas con código y datos anónimos, el concurso Apex SN1 y auditorías.',
         intro:   'El protocolo es un sistema nativo descentralizado, multi-IP y multi-transporte diseñado para escalar a millones de mineros por operador de red. Cada área algorítmica a continuación se publica con su código fuente y, cuando corresponde, conjuntos de datos anonimizados para análisis independiente.',
+        // the card for the research report (an English page, so the link says so)
+        report: {
+            tag: 'Informe',
+            date: '24 de agosto – 24 de octubre de 2026',
+            title: 'Informe de investigación de agosto–octubre de 2026',
+            body: 'La investigación busca dar a todos el mejor cifrado y la mejor velocidad para el uso diario, que hacen que tu internet sea mejor. El informe reúne en una línea de tiempo 39 cambios medidos en ese camino, hasta dónde llegó cada tipo de mejora y cómo se hizo la investigación.',
+            cta: 'Leer el informe (en inglés)'
+        },
         areaLabels: {
             approach: 'Enfoque actual',
             implementation: 'Implementación',
