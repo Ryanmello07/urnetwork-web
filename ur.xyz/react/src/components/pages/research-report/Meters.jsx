@@ -6,12 +6,14 @@ import { tipHandlers } from './tooltip';
 import Glyph from './Glyph';
 
 /**
- * The meters of the research report: one per axis, never combined, each as of
- * the entry the reader is at (active.js). The rail beside the timeline (wide
- * screens) and the block above it (tablets and phones) are this component in
- * two modes. Every mark is drawn from the start and shown only once its entry
- * is reached, so no box changes size as the meters fill (DESIGNSTYLE:
- * placeholders, not pop-in); scrolling back rewinds them.
+ * The meters of the research report: one per axis, never combined. In the rail
+ * beside the timeline (wide screens) they follow the reader, each as of the
+ * entry the reader is at (active.js). Every mark is drawn from the start and
+ * shown only once its entry is reached, so no box changes size as the meters
+ * fill (DESIGNSTYLE: placeholders, not pop-in); scrolling back rewinds them.
+ * On tablets and phones the bar under the nav follows the reader instead, and
+ * the meters close the timeline in their final mode: where each one ended,
+ * after the last entry.
  */
 const ENTRIES = data.entries;
 const STATES = computeStates(ENTRIES);
@@ -208,7 +210,17 @@ function Others({ items, open, onToggle }) {
 }
 
 export default function ReportMeters({ mode = 'rail' }) {
+    return mode === 'final' ? <MeterSet mode={mode} index={ENTRIES.length - 1} /> : <FollowingMeters mode={mode} />;
+}
+
+/** The meters as of the entry the reader is at. */
+function FollowingMeters({ mode }) {
     const { index } = useActiveEntry();
+    return <MeterSet mode={mode} index={index} follow />;
+}
+
+/** The meters as of entry `index`; `follow` when they move with the reader. */
+function MeterSet({ mode, index, follow = false }) {
     const reduced = useReducedMotion();
     const state = STATES[index + 1];
     const [pulses, setPulses] = useState({});
@@ -216,8 +228,8 @@ export default function ReportMeters({ mode = 'rail' }) {
     const prev = useRef(index);
     const [animate, setAnimate] = useState(false);
 
-    // a meter flashes once when the entry that moves it is reached going forward,
-    // or when an entry's chip asks for it
+    // following the reader, a meter flashes once when the entry that moves it is
+    // reached going forward, or when an entry's chip asks for it
     const flash = (keys) => {
         if (reduced || !keys.length) return;
         setPulses((p) => {
@@ -227,7 +239,7 @@ export default function ReportMeters({ mode = 'rail' }) {
         });
         setTimeout(() => setPulses((p) => { const next = { ...p }; for (const k of keys) next[k] = 0; return next; }), 1400);
     };
-    useEffect(() => onPulse((key) => flash([key])), [reduced]);
+    useEffect(() => (follow ? onPulse((key) => flash([key])) : undefined), [reduced, follow]);
     useEffect(() => {
         const from = prev.current;
         prev.current = index;
@@ -253,7 +265,10 @@ export default function ReportMeters({ mode = 'rail' }) {
         return `rr-meter${p ? (p % 2 ? ' is-pulse-a' : ' is-pulse-b') : ''}`;
     };
     const othersOf = (key) => state[key].filter((p) => !p.featured);
-    const recentFixed = state.fixed.slice(mode === 'rail' ? -1 : -3).reverse();
+    // the rail has room for the latest recovery; the final block lists them all, in timeline order
+    const fixedList = mode === 'rail' ? state.fixed.slice(-1) : state.fixed;
+    // under the final block's own heading (ResearchReport.jsx)
+    const Name = mode === 'final' ? 'h4' : 'h3';
 
     return (
         <div className={`rr-meters-set rr-meters-${mode}`}>
@@ -273,7 +288,7 @@ export default function ReportMeters({ mode = 'rail' }) {
                     const value = m.key === 'load' ? load : m.key === 'bulk' ? bulk : counts[m.key];
                     return (
                         <section key={m.key} className={meterClass(m.key)} data-meter={m.key} aria-label={m.name}>
-                            <h3 className="rr-meter-name">{m.name}{m.key === 'load' && mode === 'rail' && state.load.final ? <small className="is-final">4.7–7.3× vs Aug 24</small> : <small>{m.tag}</small>}</h3>
+                            <Name className="rr-meter-name">{m.name}{m.key === 'load' && mode === 'rail' && state.load.final ? <small className="is-final">4.7–7.3× vs Aug 24</small> : <small>{m.tag}</small>}</Name>
                             <p className={`rr-meter-value${empty ? ' is-empty' : ''}`}>
                                 <b>{value}</b>
                                 <em style={empty ? { visibility: 'hidden' } : undefined}>{m.unit}</em>
@@ -309,8 +324,8 @@ export default function ReportMeters({ mode = 'rail' }) {
                             )}
                             {m.key === 'fixed' && (
                                 <ul className="rr-meter-list">
-                                    {recentFixed.map((p) => <li key={p.l}><Glyph kind="recovery" size={9} /><span>{p.l}</span><time>{p.date}</time></li>)}
-                                    {state.fixed.length > recentFixed.length && <li className="is-more">and {state.fixed.length - recentFixed.length} earlier</li>}
+                                    {fixedList.map((p) => <li key={p.l}><Glyph kind="recovery" size={9} /><span>{p.l}</span><time>{p.date}</time></li>)}
+                                    {state.fixed.length > fixedList.length && <li className="is-more">and {state.fixed.length - fixedList.length} earlier</li>}
                                 </ul>
                             )}
                         </section>

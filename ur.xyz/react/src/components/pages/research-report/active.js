@@ -1,8 +1,8 @@
 /**
  * Where the reader is on the research report, shared by every part of the page
  * that follows them: the section sidebar and the meters in the rail (wide
- * screens), the meters above the timeline, and the bar under the nav (tablets
- * and phones). On the static page these are separate islands; they share this
+ * screens), and the bar under the nav (tablets and phones). On the static
+ * page these are separate islands; they share this
  * module, so one scroll listener serves them all and they always agree.
  *
  *   index       the last timeline entry whose top has passed the reading line
