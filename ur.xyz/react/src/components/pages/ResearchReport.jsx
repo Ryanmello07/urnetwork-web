@@ -44,14 +44,14 @@ function Linked({ text, used }) {
         : <React.Fragment key={i}>{run.text}</React.Fragment>));
 }
 
-export default function ResearchReportPage({ updated = null, toc = null, glance = null, railMeters = null, inlineMeters = null, dock = null, termTips = null, ...figures }) {
+export default function ResearchReportPage({ updated = null, toc = null, glance = null, railMeters = null, finalMeters = null, dock = null, termTips = null, ...figures }) {
     return (
         <div className="rr-page">
             {/* the sections, in the left margin on wide screens */}
             {/* the sticky box is outside the island, so it sticks on the static page too */}
             <aside className="rr-toc"><div className="rr-toc-sticky">{toc || <ReportToc />}</div></aside>
             <Intro updated={updated} glance={glance || <ReportGlance />} />
-            <Timeline rail={railMeters || <ReportMeters mode="rail" />} inline={inlineMeters || <ReportMeters mode="inline" />} />
+            <Timeline rail={railMeters || <ReportMeters mode="rail" />} final={finalMeters || <ReportMeters mode="final" />} />
             <Methods figures={figures} />
             <div className="rr-group" id="milestones">
                 <Milestone />
@@ -223,7 +223,12 @@ function monthSpan(list, label) {
     return `${label} ${Math.min(...days)}–${Math.max(...days)}`;
 }
 
-function Timeline({ rail, inline }) {
+/**
+ * The entries by month, with the meters beside them in the rail on wide
+ * screens. Under 1320px the bar under the nav carries the meters while the
+ * reader is in the timeline, and the timeline ends with where they ended.
+ */
+function Timeline({ rail, final }) {
     return (
         <section id="timeline" className="section rr-timeline" aria-labelledby="timeline-title">
             <div className="rr-tl-layout">
@@ -237,8 +242,11 @@ function Timeline({ rail, inline }) {
                         <p>Each entry leads with its result in plain words and one figure. Open it for the exact measurements, what they mean for the test suites, and the evidence. Entries that were rejected or made no difference stay on the timeline, marked as such.</p>
                         <p>The meters replay the evidence as you read. Each one moves only when you reach the entry that recorded it, and none of them is ever combined with another.</p>
                     </div>
-                    {inline}
                     {MONTHS.map((m) => <Month key={m.key} month={m} />)}
+                    <section className="rr-tl-final" aria-labelledby="timeline-final-heading">
+                        <h3 className="rr-subhead" id="timeline-final-heading">Where the meters ended</h3>
+                        {final}
+                    </section>
                 </div>
                 <aside className="rr-rail" aria-label="The meters, as of the entry you are reading">
                     <div className="rr-rail-sticky">{rail}</div>

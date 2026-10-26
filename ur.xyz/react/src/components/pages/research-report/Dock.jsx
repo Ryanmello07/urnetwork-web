@@ -15,8 +15,9 @@ const STATES = computeStates(ENTRIES);
  * else the section being read. Its menu button opens every section of the
  * page, the sidebar's list. The bar snaps in and out (one 420ms ease-in-out,
  * never scrubbed by the scroll) and overlays the page, so nothing in the
- * column moves. The meters repeat the block above the timeline, so they are
- * hidden from assistive technology; the menu is not.
+ * column moves. The meters are hidden from assistive technology (each value
+ * is in the entry that recorded it, and the timeline ends with where they
+ * ended); the menu is not.
  */
 export default function ReportDock() {
     const { index, docked, section, inTimeline } = useActiveEntry();

@@ -6,12 +6,14 @@
  *                               the page on the left, sticky under the nav, and
  *                               beside the timeline the meters on the right.
  *                               The column stays where every page has it.
- *   tablet (600px to 1319px)    the meters sit above the timeline, with their
- *                               charts, and a bar docks under the nav once the
- *                               title has scrolled away: the meters while the
- *                               reader is in the timeline, the section being
- *                               read anywhere else, and a menu of the sections.
- *   phone (under 600px)         the same, with the meters as compact figures.
+ *   tablet (600px to 1319px)    a bar docks under the nav once the title has
+ *                               scrolled away: the meters while the reader is
+ *                               in the timeline, the section being read
+ *                               anywhere else, and a menu of the sections. The
+ *                               timeline ends with where the meters ended,
+ *                               with their charts.
+ *   phone (under 600px)         the same, with the final meters as compact
+ *                               figures.
  * The bar snaps (one ease-in-out, no scroll-scrubbed state, hysteresis in
  * active.js) and overlays the page, so the column never moves under the
  * reader. Colours are the brand tokens (App.css); markers carry their kind by
@@ -152,7 +154,7 @@
 .rr-rail { display: none; }
 @media (min-width: 1320px) {
     .rr-rail { display: block; position: absolute; top: 0; bottom: 0; left: calc(100% + var(--rr-side-gap)); width: var(--rr-side); }
-    .rr-tl-layout .rr-meters-inline { display: none; }
+    .rr-tl-final { display: none; }
 }
 .rr-tl-main { min-width: 0; }
 .rr-rail-sticky { position: sticky; top: calc(var(--nav-height) + 20px); max-height: calc(100vh - var(--nav-height) - 32px); overflow-y: auto; scrollbar-width: none; }
@@ -230,7 +232,7 @@
 .rr-tip-line { display: block; }
 .rr-tip a { color: var(--brand-ur); }
 
-/* --- the meters (Meters.jsx): the rail, the block above the timeline, the docked bar --- */
+/* --- the meters (Meters.jsx): the rail, the block at the end of the timeline, the docked bar --- */
 .rr-as-of { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .rr-as-of-label { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rr-muted); }
 .rr-as-of-date { font-size: 1.05rem; color: var(--brand-white); }
@@ -277,19 +279,20 @@
 .rr-meter-list .is-more { color: var(--rr-faint); }
 @media (max-height: 800px) { .rr-rail .rr-chart-legend, .rr-rail [data-meter="fixed"] .rr-meter-list { display: none; } }
 
-/* the block above the timeline (tablets and phones) */
-.rr-meters-inline { margin: 44px 0 0; padding: 20px 22px 22px; border: 1px solid var(--rr-line); background: var(--rr-panel); }
-.rr-meters-inline .rr-meters { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
-.rr-meters-inline .rr-meter[data-meter="fixed"] { grid-column: 1 / -1; }
+/* the block at the end of the timeline (tablets and phones): where the meters ended */
+.rr-tl-final { margin-top: 88px; }
+.rr-meters-final { padding: 20px 22px 22px; border: 1px solid var(--rr-line); background: var(--rr-panel); }
+.rr-meters-final .rr-meters { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+.rr-meters-final .rr-meter[data-meter="fixed"] { grid-column: 1 / -1; }
 @media (max-width: 599px) {
-    .rr-meters-inline { padding: 14px 16px 16px; }
-    .rr-meters-inline .rr-meters { column-gap: 18px; row-gap: 10px; }
-    .rr-meters-inline .rr-meter-chart, .rr-meters-inline .rr-chart-legend, .rr-meters-inline .rr-meter-list, .rr-meters-inline .rr-meter-toggle { display: none; }
-    .rr-meters-inline .rr-meter-value b { font-size: 1.25rem; }
-    .rr-meters-inline .rr-meter-value em { font-size: 0.74rem; }
-    .rr-meters-inline .rr-meter-name small { display: none; }
-    .rr-meters-inline .rr-meter-sub { font-size: 0.68rem; }
-    .rr-meters-inline .rr-meter-badge:not(.is-on) { display: none; }
+    .rr-meters-final { padding: 14px 16px 16px; }
+    .rr-meters-final .rr-meters { column-gap: 18px; row-gap: 10px; }
+    .rr-meters-final .rr-meter-chart, .rr-meters-final .rr-chart-legend, .rr-meters-final .rr-meter-list, .rr-meters-final .rr-meter-toggle { display: none; }
+    .rr-meters-final .rr-meter-value b { font-size: 1.25rem; }
+    .rr-meters-final .rr-meter-value em { font-size: 0.74rem; }
+    .rr-meters-final .rr-meter-name small { display: none; }
+    .rr-meters-final .rr-meter-sub { font-size: 0.68rem; }
+    .rr-meters-final .rr-meter-badge:not(.is-on) { display: none; }
 }
 
 /* the docked bar (Dock.jsx), under 1320px */
@@ -389,8 +392,8 @@
     .rr-meter.is-pulse-a, .rr-meter.is-pulse-b { animation: none; }
 }
 
-/* print: the timeline as a document, without the parts that follow the reader */
+/* print: the timeline as a document, without the meters and the parts that follow the reader */
 @media print {
-    .rr-toc, .rr-onpage, .rr-rail, .rr-meters-inline, .rr-dock, .rr-fig-bar { display: none !important; }
+    .rr-toc, .rr-onpage, .rr-rail, .rr-tl-final, .rr-dock, .rr-fig-bar { display: none !important; }
     .rr-more > .rr-more-body { display: block; }
 }

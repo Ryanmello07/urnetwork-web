@@ -6,13 +6,14 @@
 // the timeline, the start-to-end estimates, the methods and the glossary need
 // no script (an entry's second layer is a native <details>). The parts that
 // follow the reader are islands, passed in through the component's props of
-// the same names: the sections sidebar, the meters (in the rail on wide
-// screens and above the timeline on narrow ones), the bar that docks under the
-// nav with its menu of sections, the glance chart
-// (drawn at its measured width), the seven method animations and the glossary
-// tooltips. Their server render is their first state (before the first entry,
-// each animation on its key frame), so the page reads the same before they
-// hydrate. English-only, like /mainnet and the investor documents.
+// the same names: the sections sidebar, the meters in the rail (wide screens),
+// the bar that docks under the nav with its menu of sections (narrow screens),
+// the glance chart (drawn at its measured width), the seven method animations
+// and the glossary tooltips. Their server render is their first state (before
+// the first entry, each animation on its key frame), so the page reads the
+// same before they hydrate. The meters that close the timeline on narrow
+// screens never move (where each ended); they hydrate for their tooltips and
+// toggles. English-only, like /mainnet and the investor documents.
 import Base from '../../layouts/Base.astro';
 import DisclaimerStatic from '../../components/DisclaimerStatic.astro';
 import NavIsland from '../../islands/NavIsland.jsx';
@@ -67,7 +68,7 @@ const jsonLd = [{
             <ResearchReportPage updated={LASTMOD_TOKEN}>
                 <ReportToc slot="toc" client:idle />
                 <ReportGlance slot="glance" client:visible={{ rootMargin: '200px' }} />
-                <ReportMeters slot="inlineMeters" mode="inline" client:idle />
+                <ReportMeters slot="finalMeters" mode="final" client:visible={{ rootMargin: '200px' }} />
                 <ReportMeters slot="railMeters" mode="rail" client:idle />
                 <ReportDock slot="dock" client:idle />
                 <TermTips slot="termTips" client:idle />
