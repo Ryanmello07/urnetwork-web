@@ -331,12 +331,15 @@ operators: {
         competition: {
             title: '模拟延迟算法竞赛',
             eyebrow: '由 Apex (SN1) 提供支持',
-            body: '优化 UR 协议。提交的方案将与{code}的一个分支进行对比评估，胜出者将成为新的基线并赢得 SN1α。共六轮，每轮一周，即将启动。一起来吧！',
+            body: '优化 UR 协议。提交的方案将与{code}的一个分支进行对比评估，胜出者将成为新的基线并赢得 SN1α。共六轮，每轮一周。一起来吧！',
             codeLabel: '代码',
             cta: '参加竞赛',
-            statusUpcoming: '即将启动',
-            statusLive: '进行中',
+            statusUpcoming: '距开赛还有',
+            statusLive: '正在进行',
             statusEnded: '已结束',
+            units: { days: '天', hours: '时', minutes: '分', seconds: '秒' },
+            startDate: '10月29日（星期四）00:00 UTC',
+            startedDate: '已于10月29日（星期四）00:00 UTC 开赛',
             imageAlt: '两个节点经由穿过屏障的路由相连：Apex 模拟延迟竞赛'
         },
         anonymization: {

@@ -68,7 +68,7 @@ const attr = (tag, name) => (tag.match(new RegExp(`\\s${name}="([^"]*)"`, 'i')) 
 /**
  * The visible text of an HTML fragment, with images replaced by their alt
  * text. An element marked `data-volatile` (text that follows the clock rather
- * than an edit, like the research page's live/upcoming pill) is left out; it
+ * than an edit, like the research page's competition countdown) is left out; it
  * must not nest an element of its own tag.
  */
 function textOf(fragment) {

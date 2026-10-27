@@ -333,12 +333,15 @@ operators: {
         competition: {
             title: 'Competencia de algoritmos de latencia simulada',
             eyebrow: 'Impulsada por Apex (SN1)',
-            body: 'Optimiza el protocolo UR. Las propuestas se evalúan frente a una rama {code} y la ganadora se convierte en la nueva línea base y gana SN1α. Seis rondas de una semana cada una, próximamente. ¡Vamos!',
+            body: 'Optimiza el protocolo UR. Las propuestas se evalúan frente a una rama {code} y la ganadora se convierte en la nueva línea base y gana SN1α. Seis rondas de una semana cada una. ¡Vamos!',
             codeLabel: 'del código',
             cta: 'Únete a la competencia',
-            statusUpcoming: 'Próximamente',
-            statusLive: 'En curso',
+            statusUpcoming: 'Comienza en',
+            statusLive: 'En vivo',
             statusEnded: 'Finalizada',
+            units: { days: 'Días', hours: 'Horas', minutes: 'Minutos', seconds: 'Segundos' },
+            startDate: 'Jueves 29 de octubre · 00:00 UTC',
+            startedDate: 'Comenzó el jueves 29 de octubre · 00:00 UTC',
             imageAlt: 'Dos nodos unidos por rutas a través de una barrera: la competencia de latencia simulada de Apex'
         },
         anonymization: {

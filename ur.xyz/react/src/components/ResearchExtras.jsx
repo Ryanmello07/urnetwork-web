@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './ResearchExtras.css';
 import { openResearchArea, researchAreaId } from './research-areas.js';
+import { APEX_COMPETITION, competitionPhase, countdown } from './research-competition.js';
 
 /**
  * Research page extras — the algo-competition card, the algorithm areas,
@@ -9,41 +10,23 @@ import { openResearchArea, researchAreaId } from './research-areas.js';
  * Every component here is prop-driven (dict passed as `t`, or the
  * competition's own strings as `copy`), so the Astro build renders them per
  * language and the React SPA reuses them under its LanguageProvider. The
- * competition card is the one with state (its live/upcoming/ended pill reads
- * the visitor's clock), so the Astro pages hydrate it with just its strings.
+ * competition card is the one with state (its countdown runs on the
+ * visitor's clock), so the Astro pages hydrate it with just its strings.
  * The areas are native <details> — their content is in the HTML and works
  * with no JS; the one behavior (a /research#<id> deep link opens its area)
  * is a mount effect here and an inline script on the static pages
  * (research-areas.js), so they hydrate nothing.
  */
 
-// The current competition runs on Apex (Bittensor SN1): six weekly rounds
-// from the start date. Until the competition page is finalized `url` is null
-// and the card's art, title and button are not links; until a start date is
-// fixed `startsAt` is null and the card says it is launching soon.
-export const APEX_COMPETITION = Object.freeze({
-    url: null,
-    startsAt: null,
-    rounds: 6,
-    roundDays: 7,
-});
+// the competition and its schedule are in research-competition.js; the Astro
+// pages take the phase at build time from here
+export { APEX_COMPETITION, competitionPhase };
 export const APEX_COMPETITION_URL = APEX_COMPETITION.url;
 export const MASA_2025_AUDIT_URL = '/audits/masa-l2-2025.pdf';
 // the code the competition optimizes, linked from the card's body
 export const UR_CODE_URL = 'https://github.com/urnetwork';
 // the published report of each audit, by the item id in research.audits
 const AUDIT_REPORT_URLS = { 'masa-l2-2025': MASA_2025_AUDIT_URL };
-
-const DAY_MS = 86_400_000;
-/** 'upcoming' | 'live' | 'ended' at time `now` (ms): live from the start date (UTC) for rounds × roundDays days. */
-export function competitionPhase(now, { startsAt, rounds, roundDays } = APEX_COMPETITION) {
-    // no fixed start date yet: the competition is upcoming whatever the clock says
-    if (!startsAt) return 'upcoming';
-    const start = Date.parse(`${startsAt}T00:00:00Z`);
-    const end = start + rounds * roundDays * DAY_MS;
-    if (now < start) return 'upcoming';
-    return now < end ? 'live' : 'ended';
-}
 
 // The competition's preview art (public/apex-sim-latency.*), remapped from
 // its white ground to the site's #101010 and #F8F8F8 so it sits inside the
@@ -76,25 +59,127 @@ function competitionBody(body, codeLabel) {
     ]));
 }
 
+// Until the start the countdown turns every second; once the competition is
+// live only its end is left to come, so a minute will do; then it stops.
+const clockStep = (now) => ({ upcoming: 1000, live: 60_000 })[competitionPhase(now)] || 0;
+
+/**
+ * The visitor's clock (ms), read just past each whole step of the device's
+ * clock (so the countdown turns over with it) and again when a hidden tab
+ * comes back (browsers slow a background tab's timers). Null in the server
+ * render and the hydration render, so they match the HTML: a number before
+ * the effect would be a guess.
+ */
+function useClock(stepAt) {
+    const [now, setNow] = useState(null);
+    useEffect(() => {
+        let timer = 0;
+        const tick = () => {
+            clearTimeout(timer);
+            const time = Date.now();
+            setNow(time);
+            const step = stepAt(time);
+            if (step) timer = setTimeout(tick, step - (time % step) + 20);
+        };
+        const wake = () => { if (!document.hidden) tick(); };
+        tick();
+        document.addEventListener('visibilitychange', wake);
+        return () => {
+            clearTimeout(timer);
+            document.removeEventListener('visibilitychange', wake);
+        };
+    }, [stepAt]);
+    return now;
+}
+
+const CLOCK_UNITS = ['days', 'hours', 'minutes', 'seconds'];
+
+// the dot between the start's day and its time never begins a line
+const keepDot = (text) => String(text || '').replace(/ · /g, ' · ');
+
+/**
+ * One value on the clock, two digits or more, each digit in a cell of its
+ * own: a digit that changes is a new element, so it rolls in (CSS) while the
+ * others stand still. Before the clock has a time, every cell holds a dash.
+ */
+function ClockValue({ value }) {
+    const text = value == null ? '--' : String(value).padStart(2, '0');
+    return (
+        <span className="research-competition-value">
+            {[...text].map((digit, i) => (
+                // keyed from the right, so the ones keep their cell when the days drop below 100
+                <span className="research-competition-digit" key={text.length - i}>
+                    <span key={digit}>{digit}</span>
+                </span>
+            ))}
+        </span>
+    );
+}
+
+/**
+ * The band under the card's art. Until the start: the status ("Starts in")
+ * over a countdown of days, hours, minutes and seconds, with the start
+ * written under it. From the start the status alone takes the clock's place
+ * ("Live now", with a pulse), at the clock's height, so nothing under the
+ * band moves when it turns. The status is a polite live region, so the turn
+ * is announced once; the clock is a timer, which is never announced as it
+ * ticks (a reader meets it in reading order).
+ *
+ * The band's text follows the clock, not an edit, so the sitemap's content
+ * fingerprint skips it (data-volatile, astro/scripts/page-dates.mjs; it may
+ * not nest a div of its own), and the visual parity test masks the ticking
+ * digits (data-parity-ignore).
+ */
+function CompetitionClock({ c, phase, now }) {
+    const upcoming = phase === 'upcoming';
+    const left = now == null ? null : countdown(now);
+    const lastMinute = upcoming && left && !left.days && !left.hours && !left.minutes;
+    const status = { upcoming: c.statusUpcoming, live: c.statusLive, ended: c.statusEnded }[phase];
+    return (
+        <div className="research-competition-clock" data-phase={phase} data-last-minute={lastMinute ? '' : undefined} data-volatile="">
+            <span className="research-competition-clock-status" role="status">
+                {phase === 'live' && <i className="research-competition-pulse" aria-hidden="true" />}
+                {status}
+            </span>
+            {upcoming && (
+                <span className="research-competition-countdown" role="timer" data-parity-ignore="">
+                    {CLOCK_UNITS.map((unit, i) => (
+                        <React.Fragment key={unit}>
+                            {i > 0 && <span className="research-competition-sep" aria-hidden="true">:</span>}
+                            <span className="research-competition-unit">
+                                <ClockValue value={left && left[unit]} />
+                                <span className="research-competition-unit-label">{c.units[unit]}</span>
+                            </span>
+                        </React.Fragment>
+                    ))}
+                </span>
+            )}
+            {/* both lines hold the one place; the other phase's is hidden (CSS) */}
+            <span className="research-competition-when">
+                <time dateTime={APEX_COMPETITION.startsAt} aria-hidden={!upcoming || undefined}>{keepDot(c.startDate)}</time>
+                <time dateTime={APEX_COMPETITION.startsAt} aria-hidden={upcoming || undefined}>{keepDot(c.startedDate)}</time>
+            </span>
+        </div>
+    );
+}
+
 /**
  * Gold competition card at the top of the research page: the art, the
- * eyebrow with the competition's status, the title, the body and the button.
- * The body carries a link of its own, so the card is not one big link (anchors
- * cannot nest): the art, the title and the button each link to the
- * competition. The title renders once the dictionary has one
- * (research.competition.title).
+ * countdown band, the eyebrow, the title, the body and the button. The body
+ * carries a link of its own, so the card is not one big link (anchors cannot
+ * nest): the art, the title and the button each link to the competition. The
+ * title renders once the dictionary has one (research.competition.title).
  *
- * The status pill follows the visitor's clock. The first render uses
+ * The band follows the visitor's clock. Until the clock is read the phase is
  * `initialPhase` (the Astro page passes the phase at build time, so the
- * hydrating render matches the HTML) or, in the SPA, the phase now; the
- * effect then sets the phase from the clock of the browser showing it.
+ * hydrating render matches the HTML) or, in the SPA, the phase now; from the
+ * effect on it is the phase at the browser's time, and the band turns from
+ * the countdown to live at the start without a reload.
  */
 export function ResearchCompetition({ t, copy, initialPhase }) {
     const c = copy || t.research.competition;
-    const [phase, setPhase] = useState(() => initialPhase || competitionPhase(Date.now()));
-    useEffect(() => { setPhase(competitionPhase(Date.now())); }, []);
-    const status = { live: c.statusLive, upcoming: c.statusUpcoming, ended: c.statusEnded }[phase];
-    const statusText = status ? status.replace('{date}', APEX_COMPETITION.startsAt || '') : (c.statusLive || 'Live');
+    const now = useClock(clockStep);
+    const phase = now == null ? (initialPhase || competitionPhase(Date.now())) : competitionPhase(now);
     // the art, the title and the button link to the competition page once it exists
     const Hero = APEX_COMPETITION_URL ? 'a' : 'div';
     const heroProps = APEX_COMPETITION_URL ? { href: APEX_COMPETITION_URL, ...external } : {};
@@ -117,17 +202,10 @@ export function ResearchCompetition({ t, copy, initialPhase }) {
                     />
                 </picture>
             </Hero>
+            <CompetitionClock c={c} phase={phase} now={now} />
             <div className="research-competition-row">
                 <div className="research-competition-copy">
-                    <div className="research-competition-head">
-                        <span className="research-competition-eyebrow">{c.eyebrow}</span>
-                        {/* data-volatile: its text follows the clock, not an edit, so the
-                            sitemap's content fingerprint skips it (astro/scripts/page-dates.mjs) */}
-                        <span className="research-competition-status" role="status" data-phase={phase} data-volatile="">
-                            {phase === 'live' && <i className="research-competition-pulse" aria-hidden="true" />}
-                            {statusText}
-                        </span>
-                    </div>
+                    <span className="research-competition-eyebrow">{c.eyebrow}</span>
                     {c.title && (
                         <h2 className="research-competition-title">
                             {APEX_COMPETITION_URL

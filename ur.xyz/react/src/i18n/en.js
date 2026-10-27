@@ -362,13 +362,18 @@ operators: {
             title: 'Sim Latency Algo Competition',
             eyebrow: 'Powered by Apex (SN1)',
             // {code} renders as a link (to the urnetwork GitHub) worded codeLabel
-            body: 'Optimize the UR protocol. Submissions evaluate against a branch of {code} and the winner becomes the next baseline and earns SN1α. Spanning six rounds, one week each, launching soon. Let\'s go!',
+            body: 'Optimize the UR protocol. Submissions evaluate against a branch of {code} and the winner becomes the next baseline and earns SN1α. Spanning six rounds, one week each. Let\'s go!',
             codeLabel: 'the code',
             cta: 'Join the Competition',
-            // the card's status pill (no start date is fixed yet)
-            statusUpcoming: 'Launching Soon',
-            statusLive: 'Live',
+            // the countdown band under the art: its status, the clock's units,
+            // and the start (research-competition.js) written under the clock,
+            // then under the live status
+            statusUpcoming: 'Starts in',
+            statusLive: 'Live now',
             statusEnded: 'Ended',
+            units: { days: 'Days', hours: 'Hours', minutes: 'Minutes', seconds: 'Seconds' },
+            startDate: 'Thursday, October 29 · 00:00 UTC',
+            startedDate: 'Started Thursday, October 29 · 00:00 UTC',
             imageAlt: 'Two nodes joined by routes through a barrier: the Apex sim-latency competition'
         },
         anonymization: {
