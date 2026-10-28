@@ -15,8 +15,9 @@
 //
 //   node ../scripts/generate-deck-slides.mjs <deck.pdf>
 //
-// Writes react/public/investors/deck/NN.webp (2560 px wide) and NN-1280.webp
-// (1280 px, the srcset candidate a 1x screen or a phone picks) and copies the PDF to
+// Writes react/public/investors/deck/NN.webp (2560 px wide), NN-1280.webp
+// (1280 px, the srcset candidate a 1x screen or a phone picks) and NN-480.webp
+// (the filmstrip) and copies the PDF to
 // react/public/investors/ur-investor-deck.pdf: react/public is the source of
 // truth for static assets, and `make sync-public` mirrors them into
 // astro/public at build time. Prints the slide count, which must match
@@ -40,8 +41,9 @@ const PDF_OUT = path.join(PUBLIC, 'ur-investor-deck.pdf');
 // stretched to a 1440p fullscreen. Above that the files grow faster than the
 // visible detail does. 1280 is the size a 1x screen or a phone needs (the
 // viewer's srcset offers both); rendering it from the PDF rather than scaling
-// the 2560 keeps its text sharp.
-const WIDTHS = [2560, 1280];
+// the 2560 keeps its text sharp. 480 is the filmstrip under the viewer: sharp
+// at its ~170 px on a 2x screen, and ~160 KB for every slide, not ~700.
+const WIDTHS = [2560, 1280, 480];
 const QUALITY = 0.9;
 // the file for a slide at a width: 07.webp, 07-1280.webp
 const slideFile = (n, width) => `${String(n).padStart(2, '0')}${width === WIDTHS[0] ? '' : `-${width}`}.webp`;

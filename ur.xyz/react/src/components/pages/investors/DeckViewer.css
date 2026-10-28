@@ -1,45 +1,64 @@
 /* DeckViewer.css — the slide viewer on /investors/deck.
  *
- * Built to read as a deck rather than a column of images: one fixed-aspect
- * stage that never changes size between slides, so nothing on the page moves
- * as you click through.
+ * Built to read as a deck rather than a column of images: the slide is the
+ * page. One fixed-aspect stage that never changes size between slides, sized
+ * so the slide and its control bar fit in one screen, with a filmstrip under,
+ * lifted off the page by a rounded frame and a soft glow in the brand colours.
  */
 
 .deck-page {
-    /* the slide stage is wider than the content column where there is room;
-       on tablets and phones it keeps to the content gutter (App.css) */
+    /* The widest the deck gets: the content column where there is room; on
+       tablets and phones it keeps to the content gutter (App.css). */
     --deck-shell: min(1180px, calc(100vw - (var(--content-gutter) * 2)));
+    /* Everything on screen that is not the slide: the fixed header, the
+       heading, the control bar and the gaps between them. The slide takes
+       the rest of the screen's height, and its width follows at 16:9; the
+       filmstrip sits just under the fold. */
+    --deck-chrome: 330px;
+    --deck-frame: min(var(--deck-shell), max(560px, calc((100svh - var(--deck-chrome)) * 16 / 9)));
+    --deck-radius: 18px;
+    --deck-line: rgba(214, 230, 244, 0.14);
+    --deck-muted: rgba(214, 230, 244, 0.56);
     /* The page shell's <main class="section-page"> already pads one nav
-       height; this adds the second, so the page sits where it did when it
-       was its own <main> padded by two. */
-    padding-top: var(--nav-height);
+       height; this adds the second, which with it clears the fixed
+       disclaimer bar and nav. */
+    padding-top: calc(var(--nav-height) + 20px);
     background: var(--brand-bg);
+    overflow-x: clip;
 }
 
-.deck-shell {
-    width: var(--deck-shell);
+.deck-frame {
+    width: var(--deck-frame);
     margin-inline: auto;
 }
 
-/* --- heading, mirroring the letter ------------------------------------- */
+/* --- heading ------------------------------------------------------------ */
 
-.deck-back-row {
-    padding-top: 38px;
+.deck-heading {
+    padding-bottom: 20px;
 }
 
 .deck-back {
     display: inline-flex;
-    min-height: 44px;
+    min-height: 32px;
     align-items: center;
-    gap: 9px;
-    color: rgba(214, 230, 244, 0.74);
-    font-size: 0.8rem;
+    gap: 8px;
+    color: var(--deck-muted);
+    font-family: 'PPNeueBit', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     text-decoration: none;
+    transition: color 0.16s ease;
+}
+
+.deck-back:hover,
+.deck-back:focus-visible {
+    color: var(--brand-white);
 }
 
 .deck-back span {
     color: var(--brand-ur);
-    font-size: 1rem;
     transition: transform 0.16s ease;
 }
 
@@ -48,96 +67,104 @@
     transform: translateX(-3px);
 }
 
-.deck-heading {
-    padding-block: 42px 30px;
+.deck-title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 24px;
 }
 
 .deck-heading h1 {
-    max-width: 850px;
-    margin: 0 0 26px;
+    margin: 0;
     color: var(--brand-white);
-    font-size: clamp(2.6rem, 5vw, 4rem);
+    font-size: clamp(1.6rem, 2.4vw, 2.1rem);
     font-weight: 400;
-    letter-spacing: -0.045em;
-    line-height: 1;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
 }
 
 .deck-meta {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 24px;
-    color: rgba(214, 230, 244, 0.5);
-    font-size: 0.76rem;
-    letter-spacing: 0.03em;
+    gap: 10px;
+    color: var(--deck-muted);
+    font-family: 'PPNeueBit', monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-}
-
-/* Same affordance and position as the letter's Download PDF. */
-.deck-download {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-    gap: 9px;
-    margin-inline-start: auto;
-    padding-inline: 16px;
-    border: 1px solid rgba(214, 230, 244, 0.23);
-    color: rgba(214, 230, 244, 0.74);
-    font-size: 0.76rem;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: border-color 0.16s ease, color 0.16s ease;
-}
-
-.deck-download:hover,
-.deck-download:focus-visible {
-    border-color: var(--brand-ur);
-    color: var(--brand-white);
-}
-
-.deck-download i {
-    font-style: normal;
-    color: var(--brand-ur);
-    transition: transform 0.16s ease;
-}
-
-.deck-download:hover i {
-    transform: translateY(2px);
 }
 
 /* --- the stage ---------------------------------------------------------- */
+
+/* Its own stacking context, so the glow sits behind the slide but above the
+   page. */
+.deck-viewport {
+    position: relative;
+    isolation: isolate;
+}
+
+.deck-viewport::before {
+    content: '';
+    position: absolute;
+    inset: 10% 4% -8%;
+    z-index: -1;
+    background:
+        radial-gradient(50% 60% at 28% 55%, rgba(237, 143, 255, 0.3), transparent 70%),
+        radial-gradient(55% 65% at 74% 50%, rgba(0, 57, 222, 0.48), transparent 72%);
+    filter: blur(48px);
+    pointer-events: none;
+}
 
 .deck-stage {
     position: relative;
     aspect-ratio: 16 / 9;
     width: 100%;
     overflow: hidden;
-    border: 1px solid rgba(214, 230, 244, 0.18);
-    background: #0b0b0b;
+    border-radius: var(--deck-radius);
+    background:
+        linear-gradient(100deg, transparent 30%, rgba(214, 230, 244, 0.05) 50%, transparent 70%) 0 0 / 300% 100%,
+        #0b0b0b;
+    box-shadow:
+        0 0 0 1px rgba(214, 230, 244, 0.12),
+        0 30px 80px -20px rgba(0, 0, 0, 0.8);
+    /* the shimmer is what shows while a slide is still loading */
+    animation: deck-shimmer 1.6s linear infinite;
 }
 
+@keyframes deck-shimmer {
+    from { background-position: 100% 0, 0 0; }
+    to { background-position: -50% 0, 0 0; }
+}
+
+/* A move crossfades: the incoming slide fades in on top, and the outgoing
+   one waits until it is covered before it goes, so the empty stage never
+   shows between slides. */
 .deck-slide {
     position: absolute;
     inset: 0;
+    z-index: 0;
     display: block;
     width: 100%;
     height: 100%;
     object-fit: contain;
     opacity: 0;
-    transition: opacity 0.22s ease;
+    transition: opacity 0.2s ease 0.32s;
     pointer-events: none;
 }
 
 .deck-slide.is-current {
+    z-index: 1;
     opacity: 1;
+    transition: opacity 0.32s ease;
 }
 
-/* Click the left or right half of the stage to move through the deck. */
+/* Click the left or right third of the stage to move through the deck. */
 .deck-hit {
     position: absolute;
     top: 0;
     bottom: 0;
+    z-index: 2;
     width: 34%;
     padding: 0;
     border: 0;
@@ -149,155 +176,306 @@
 .deck-hit--prev { left: 0; cursor: w-resize; }
 .deck-hit--next { right: 0; cursor: e-resize; }
 
+.deck-hit:disabled { cursor: default; }
+
 .deck-hit:focus-visible {
     outline: 2px solid var(--brand-ur);
     outline-offset: -4px;
+    border-radius: var(--deck-radius);
 }
 
-/* --- controls under the stage ------------------------------------------ */
+/* --- the control bar ---------------------------------------------------- */
 
 .deck-controls {
     display: flex;
-    align-items: center;
-    gap: 18px;
+    justify-content: center;
     margin-top: 18px;
 }
 
-.deck-arrow {
+.deck-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 100%;
+    padding: 5px;
+    border-radius: 999px;
+    background: rgba(214, 230, 244, 0.04);
+    box-shadow: inset 0 0 0 1px var(--deck-line);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.deck-bar svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.deck-arrow,
+.deck-pill-button {
     display: inline-flex;
-    width: 44px;
-    height: 44px;
+    min-width: 40px;
+    height: 40px;
+    flex: none;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(214, 230, 244, 0.23);
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
     background: transparent;
     color: var(--brand-ui);
-    font-size: 1rem;
+    font-family: inherit;
+    font-size: 0.82rem;
+    text-decoration: none;
     cursor: pointer;
-    transition: border-color 0.16s ease, color 0.16s ease, opacity 0.16s ease;
+    transition: background 0.16s ease, color 0.16s ease, opacity 0.16s ease;
+}
+
+.deck-download {
+    padding-inline: 14px;
 }
 
 .deck-arrow:hover:not(:disabled),
-.deck-arrow:focus-visible:not(:disabled) {
-    border-color: var(--brand-ur);
+.deck-arrow:focus-visible:not(:disabled),
+.deck-pill-button:hover,
+.deck-pill-button:focus-visible {
+    background: rgba(214, 230, 244, 0.08);
     color: var(--brand-white);
+    outline: none;
+}
+
+.deck-arrow:focus-visible,
+.deck-pill-button:focus-visible {
+    box-shadow: 0 0 0 1px var(--brand-ur);
+}
+
+.deck-download svg {
+    color: var(--brand-ur);
 }
 
 .deck-arrow:disabled {
-    opacity: 0.3;
+    opacity: 0.28;
     cursor: default;
 }
 
 .deck-count {
-    color: rgba(214, 230, 244, 0.74);
+    min-width: 64px;
+    color: var(--brand-white);
     font-family: 'PPNeueBit', monospace;
     font-size: 1.05rem;
     letter-spacing: 0.08em;
+    text-align: center;
     font-variant-numeric: tabular-nums;
 }
 
-/* One tick per slide: position at a glance, and a jump target. */
-.deck-ticks {
+.deck-bar-rule {
+    width: 1px;
+    height: 20px;
+    margin-inline: 6px;
+    background: var(--deck-line);
+}
+
+/* One segment per slide: where you are, and how much is behind you. */
+.deck-progress {
     display: flex;
-    flex: 1;
-    gap: 6px;
-    align-items: center;
+    width: clamp(120px, 16vw, 220px);
+    gap: 3px;
+    margin-inline: 10px 4px;
 }
 
-/* The rail should read as a 3px line, but a 3px-tall button is a fiddly
-   target with a mouse and an unusable one on a phone. The bar is drawn as a
-   pseudo-element so the button itself can be 24px of transparent height. */
-.deck-tick {
-    position: relative;
+.deck-progress span {
     flex: 1;
-    height: 24px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-}
-
-.deck-tick::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 0;
-    left: 0;
-    height: 3px;
+    height: 2px;
+    border-radius: 2px;
     background: rgba(214, 230, 244, 0.16);
-    transform: translateY(-50%);
-    transition: background 0.16s ease;
+    transition: background 0.2s ease;
 }
 
-.deck-tick:hover::after,
-.deck-tick:focus-visible::after {
-    background: rgba(214, 230, 244, 0.4);
+.deck-progress .is-seen {
+    background: rgba(237, 143, 255, 0.45);
 }
 
-.deck-tick.is-current::after {
+.deck-progress .is-current {
     background: var(--brand-ur);
 }
 
-.deck-fullscreen {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-    padding-inline: 14px;
-    border: 1px solid rgba(214, 230, 244, 0.23);
-    background: transparent;
-    color: rgba(214, 230, 244, 0.74);
-    font-family: inherit;
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: border-color 0.16s ease, color 0.16s ease;
+/* --- the filmstrip ------------------------------------------------------ */
+
+/* As wide as the deck can get, so it shows a few more slides than the stage
+   is wide; the current one is scrolled to the middle and the ends fade out. */
+.deck-strip-shell {
+    width: var(--deck-shell);
+    margin-inline: auto;
 }
 
-.deck-fullscreen:hover,
-.deck-fullscreen:focus-visible {
-    border-color: var(--brand-ur);
+/* positioned, so a thumbnail's offsetLeft is measured from the strip, which is
+   what the viewer's centring scroll needs */
+.deck-strip {
+    position: relative;
+    display: flex;
+    gap: 14px;
+    margin-top: 6px;
+    padding: 18px 4px 10px;
+    overflow-x: auto;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    scrollbar-width: none;
+}
+
+.deck-strip::-webkit-scrollbar { display: none; }
+
+.deck-thumb {
+    position: relative;
+    display: block;
+    flex: 0 0 168px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 8px;
+    background: #0b0b0b;
+    box-shadow: 0 0 0 1px rgba(214, 230, 244, 0.1);
+    cursor: pointer;
+    transition: box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.deck-thumb img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    opacity: 0.55;
+    transition: opacity 0.16s ease;
+}
+
+.deck-thumb:hover img,
+.deck-thumb:focus-visible img,
+.deck-thumb.is-current img {
+    opacity: 1;
+}
+
+.deck-thumb:hover,
+.deck-thumb:focus-visible {
+    box-shadow: 0 0 0 1px rgba(214, 230, 244, 0.4);
+    transform: translateY(-2px);
+    outline: none;
+}
+
+.deck-thumb.is-current {
+    box-shadow:
+        0 0 0 2px var(--brand-ur),
+        0 14px 30px -14px rgba(237, 143, 255, 0.6);
+}
+
+.deck-thumb-label {
+    position: absolute;
+    bottom: 5px;
+    left: 6px;
+    padding: 0 5px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.65);
     color: var(--brand-white);
+    font-family: 'PPNeueBit', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    line-height: 1.35;
 }
 
 .deck-hint {
-    margin: 14px 0 0;
-    color: rgba(214, 230, 244, 0.4);
-    font-size: 0.78rem;
+    margin: 10px 0 0;
+    color: rgba(214, 230, 244, 0.36);
+    font-size: 0.74rem;
+    text-align: center;
 }
 
 .deck-hint kbd {
-    padding: 1px 6px;
-    border: 1px solid rgba(214, 230, 244, 0.2);
+    display: inline-block;
+    min-width: 20px;
+    padding: 0 5px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px rgba(214, 230, 244, 0.18);
     font-family: 'PPNeueBit', monospace;
-    font-size: 0.85em;
+    font-size: 0.95em;
+    text-align: center;
 }
 
-/* --- the outline: the deck as text, under the viewer ------------------- */
+/* --- the outline: the deck as text, collapsed under the viewer ---------- */
 
 .deck-outline {
-    padding-top: 72px;
+    margin-top: 72px;
+    border-top: 1px solid var(--deck-line);
+    border-bottom: 1px solid var(--deck-line);
 }
 
-.deck-outline > h2 {
+.deck-outline summary {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding-block: 22px;
+    list-style: none;
+    cursor: pointer;
+}
+
+.deck-outline summary::-webkit-details-marker {
+    display: none;
+}
+
+.deck-outline summary:focus-visible {
+    outline: 2px solid var(--brand-ur);
+    outline-offset: 4px;
+}
+
+.deck-outline h2 {
     margin: 0;
     color: var(--brand-white);
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: clamp(1.3rem, 2.2vw, 1.6rem);
     font-weight: 400;
     letter-spacing: -0.03em;
     line-height: 1.1;
 }
 
+.deck-outline-hint {
+    color: var(--deck-muted);
+    font-size: 0.82rem;
+}
+
+/* a chevron drawn from two borders; it turns to point up when open */
+.deck-outline-chevron {
+    width: 8px;
+    height: 8px;
+    margin-left: auto;
+    border-right: 1.5px solid var(--brand-ui);
+    border-bottom: 1.5px solid var(--brand-ui);
+    transform: translateY(-3px) rotate(45deg);
+    transition: transform 0.2s ease;
+}
+
+.deck-outline[open] .deck-outline-chevron {
+    transform: translateY(1px) rotate(-135deg);
+}
+
+.deck-outline summary:hover h2 {
+    color: var(--brand-ur);
+}
+
 .deck-outline-list {
-    margin: 26px 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid rgba(214, 230, 244, 0.14);
+    border-top: 1px solid var(--deck-line);
 }
 
 .deck-outline-list li {
     padding: 24px 0;
-    border-bottom: 1px solid rgba(214, 230, 244, 0.14);
+}
+
+.deck-outline-list li + li {
+    border-top: 1px solid var(--deck-line);
 }
 
 .deck-outline-label {
@@ -327,16 +505,18 @@
 }
 
 .deck-outro {
-    padding-block: 54px 96px;
+    padding-block: 40px 96px;
 }
 
-/* Fullscreen: the stage becomes the whole screen, controls overlay the foot. */
+/* Fullscreen: the stage becomes the whole screen. */
 .deck-stage:fullscreen {
     aspect-ratio: auto;
     width: 100vw;
     height: 100vh;
-    border: 0;
+    border-radius: 0;
+    box-shadow: none;
     background: #000;
+    animation: none;
 }
 
 .deck-stage:fullscreen .deck-slide {
@@ -344,29 +524,50 @@
 }
 
 @media (max-width: 720px) {
+    .deck-page {
+        --deck-frame: var(--deck-shell);
+        --deck-radius: 12px;
+    }
+
+    .deck-bar {
+        justify-content: center;
+    }
+
+    .deck-progress,
+    .deck-bar-rule,
+    .deck-download span {
+        display: none;
+    }
+
     .deck-download {
-        margin-inline-start: 0;
+        padding-inline: 0;
     }
 
-    .deck-controls {
-        flex-wrap: wrap;
-    }
-
-    .deck-ticks {
-        order: 3;
-        flex-basis: 100%;
-        overflow-x: auto;
-        padding-bottom: 4px;
-        scroll-snap-type: x proximity;
-        scrollbar-width: none;
-    }
-
-    .deck-ticks::-webkit-scrollbar { display: none; }
-
-    .deck-tick {
-        flex: 0 0 44px;
+    .deck-pill-button,
+    .deck-arrow {
+        min-width: 44px;
         height: 44px;
-        scroll-snap-align: start;
+    }
+
+    /* Edge to edge on a phone, swiped rather than clicked. */
+    .deck-strip-shell {
+        width: 100%;
+    }
+
+    .deck-strip {
+        gap: 10px;
+        padding: 14px var(--content-gutter) 8px;
+        scroll-snap-type: x proximity;
+    }
+
+    .deck-thumb {
+        flex-basis: 136px;
+        scroll-snap-align: center;
+    }
+
+    /* No keyboard on a phone; the hint would only point at keys it lacks. */
+    .deck-hint {
+        display: none;
     }
 
     /* Tapping the stage edges is unreliable next to a scroll gesture. */
@@ -377,8 +578,15 @@
 
 @media (prefers-reduced-motion: reduce) {
     .deck-slide,
+    .deck-slide.is-current,
     .deck-back span,
-    .deck-download i {
+    .deck-thumb,
+    .deck-progress span,
+    .deck-outline-chevron {
         transition: none;
+    }
+
+    .deck-stage {
+        animation: none;
     }
 }
