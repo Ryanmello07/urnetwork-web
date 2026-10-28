@@ -78,8 +78,18 @@ export default function NetworkStackExhibit() {
 
         const distanceBetween = ([first, second]) => Math.hypot(second.x - first.x, second.y - first.y);
 
+        // The preview is only scaled on narrow screens (InvestorLetter.css,
+        // max-width: 900px). Wider, the diagram lays itself out at full size,
+        // so a pinned height would clip it and give the preview a scroll bar.
+        const scaledPreview = window.matchMedia('screen and (max-width: 900px)');
+
         const fitPreview = () => {
             if (diagram.parentElement !== preview) return;
+            if (!scaledPreview.matches) {
+                preview.style.removeProperty('height');
+                diagram.style.removeProperty('--stack-preview-scale');
+                return;
+            }
             const scale = Math.min(1, preview.clientWidth / intrinsicWidth);
             diagram.style.setProperty('--stack-preview-scale', String(scale));
             preview.style.height = `${Math.ceil(diagram.offsetHeight * scale)}px`;
@@ -99,6 +109,7 @@ export default function NetworkStackExhibit() {
         resizeObserver.observe(preview);
         resizeObserver.observe(diagram);
         fitPreview();
+        listen(scaledPreview, 'change', fitPreview);
         document.fonts?.ready.then(() => { if (!signal.aborted) fitPreview(); });
         listen(window, 'resize', () => {
             if (dialog.open) requestAnimationFrame(fitDialog);

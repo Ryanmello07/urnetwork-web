@@ -1,15 +1,22 @@
-// Print the investor letter to a real PDF.
+// Print the Investor Centre's written documents to real PDFs.
 //
-// The letter page is the single source of truth: this prints that page through
-// Chromium's print pipeline, so `@media print` in react/src/components/pages/
-// investors/InvestorLetter.css decides how the file looks and the two can never
-// drift. The result is committed under react/public/ (the source of truth for
+// Each document's page is the single source of truth: this prints that page
+// through Chromium's print pipeline, so the `@media print` rules in its
+// stylesheet (react/src/components/pages/investors/*.css) decide how the file
+// looks and the two can never drift. The documents, their pages and their PDF
+// paths come from the investor registry (react/src/data/investors.js), so a
+// new document needs no change here. The deck is not printed: its PDF is the
+// Google Slides export (`make deck-slides`).
+//
+// The results are committed under react/public/ (the source of truth for
 // static assets, mirrored into astro/public by `make sync-public` at build
-// time) and served as a static file, which keeps Chromium out of the site
+// time) and served as static files, which keeps Chromium out of the site
 // build — `astro build` must not depend on a browser binary being present.
 //
-//   Usage:  node scripts/generate-letter-pdf.mjs           (build if output missing)
-//           node scripts/generate-letter-pdf.mjs --rebuild  (always rebuild first)
+//   Usage:  node scripts/generate-letter-pdf.mjs                       (list the documents)
+//           node scripts/generate-letter-pdf.mjs apex-competition      (print one, by slug)
+//           node scripts/generate-letter-pdf.mjs --all                 (print every document)
+//           add --rebuild to build the site first (otherwise only if the build is missing)
 //
 // Chromium comes from playwright-core, which ships no browsers of its own. If it
 // cannot find one, install it with `npx playwright install chromium`, or point
@@ -20,6 +27,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { investorCentre } from '../react/src/data/investors.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -32,8 +40,18 @@ const ASTRO_DIR = path.join(ROOT, 'astro');
 const UR_ENV = process.env.UR_ENV || 'main';
 const BUILD_DIR = path.join(ASTRO_DIR, 'build', UR_ENV);
 
-const ROUTE = '/investors/our-letter-to-bittensor.html';
-const OUT = path.join(ROOT, 'react', 'public', 'investors', 'our-letter-to-bittensor.pdf');
+// Every written document in the registry that offers a PDF, once each (the
+// registry names some documents twice, as `featured` and by name).
+const DOCUMENTS = [...new Map(
+    Object.values(investorCentre)
+        .filter((doc) => doc && typeof doc === 'object' && doc.href && doc.pdfHref && doc.kind !== 'Deck')
+        .map((doc) => [doc.href, {
+            slug: doc.href.split('/').pop(),
+            title: doc.title,
+            route: `${doc.href}.html`,
+            out: path.join(ROOT, 'react', 'public', ...doc.pdfHref.split('/').filter(Boolean)),
+        }])
+).values()];
 
 const MIME = {
     '.html': 'text/html',
@@ -106,54 +124,72 @@ async function launch() {
     }
 }
 
-const rebuild = process.argv.includes('--rebuild');
-if (rebuild || !fs.existsSync(path.join(BUILD_DIR, ROUTE.replace(/^\//, '')))) buildSite();
+const args = process.argv.slice(2);
+const rebuild = args.includes('--rebuild');
+const slugs = args.filter((arg) => !arg.startsWith('--'));
+const selected = args.includes('--all') ? DOCUMENTS : DOCUMENTS.filter((doc) => slugs.includes(doc.slug));
+
+const unknown = slugs.filter((slug) => !DOCUMENTS.some((doc) => doc.slug === slug));
+if (unknown.length || !selected.length) {
+    if (unknown.length) console.error(`unknown document: ${unknown.join(', ')}`);
+    console.log('documents (pass a slug, or --all):');
+    for (const doc of DOCUMENTS) console.log(`  ${doc.slug.padEnd(42)} -> ${path.relative(ROOT, doc.out)}`);
+    process.exit(unknown.length ? 1 : 0);
+}
+
+const missingBuild = selected.some((doc) => !fs.existsSync(path.join(BUILD_DIR, doc.route.replace(/^\//, ''))));
+if (rebuild || missingBuild) buildSite();
+
+const escapeHtml = (text) => text.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
 const { server, port } = await serve(BUILD_DIR);
 const browser = await launch();
 
 try {
-    const page = await browser.newPage();
-    await page.goto(`http://127.0.0.1:${port}${ROUTE}`, { waitUntil: 'networkidle' });
-    // Webfonts decide the line breaks; printing before they land reflows the file.
-    await page.evaluate(() => document.fonts.ready);
-    await page.emulateMedia({ media: 'print' });
+    for (const doc of selected) {
+        const page = await browser.newPage();
+        await page.goto(`http://127.0.0.1:${port}${doc.route}`, { waitUntil: 'networkidle' });
+        // Webfonts decide the line breaks; printing before they land reflows the file.
+        await page.evaluate(() => document.fonts.ready);
+        await page.emulateMedia({ media: 'print' });
 
-    fs.mkdirSync(path.dirname(OUT), { recursive: true });
-    await page.pdf({
-        path: OUT,
-        format: 'A4',
-        printBackground: true,
-        // Margins live in the stylesheet's @page rule so the print preview and
-        // this file agree; Chromium needs preferCSSPageSize to honour them.
-        preferCSSPageSize: true,
-        // Chromium ignores @page margin boxes, so the running foot has to be a
-        // template here. It sits inside the 20mm bottom margin the stylesheet
-        // reserves. An empty header template suppresses the default date/URL.
-        displayHeaderFooter: true,
-        headerTemplate: '<div></div>',
-        footerTemplate: `
-            <div style="
-                width: 100%;
-                margin: 0 16mm;
-                padding-top: 4mm;
-                border-top: 0.5px solid rgba(16,16,16,0.18);
-                display: flex;
-                justify-content: space-between;
-                font-family: -apple-system, Segoe UI, sans-serif;
-                font-size: 7pt;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                color: #6b6b6b;
-            ">
-                <span>UR &middot; Our Letter to Bittensor</span>
-                <span><span class="pageNumber"></span> / <span class="totalPages"></span></span>
-            </div>`,
-        tagged: true,
-    });
+        fs.mkdirSync(path.dirname(doc.out), { recursive: true });
+        await page.pdf({
+            path: doc.out,
+            format: 'A4',
+            printBackground: true,
+            // Margins live in the stylesheet's @page rule so the print preview and
+            // this file agree; Chromium needs preferCSSPageSize to honour them.
+            preferCSSPageSize: true,
+            // Chromium ignores @page margin boxes, so the running foot has to be a
+            // template here. It sits inside the bottom margin each stylesheet
+            // reserves. An empty header template suppresses the default date/URL.
+            displayHeaderFooter: true,
+            headerTemplate: '<div></div>',
+            footerTemplate: `
+                <div style="
+                    width: 100%;
+                    margin: 0 16mm;
+                    padding-top: 4mm;
+                    border-top: 0.5px solid rgba(16,16,16,0.18);
+                    display: flex;
+                    justify-content: space-between;
+                    font-family: -apple-system, Segoe UI, sans-serif;
+                    font-size: 7pt;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    color: #6b6b6b;
+                ">
+                    <span>UR &middot; ${escapeHtml(doc.title)}</span>
+                    <span><span class="pageNumber"></span> / <span class="totalPages"></span></span>
+                </div>`,
+            tagged: true,
+        });
+        await page.close();
 
-    const kb = (fs.statSync(OUT).size / 1024).toFixed(0);
-    console.log(`wrote ${path.relative(ROOT, OUT)} (${kb} KB)`);
+        const kb = (fs.statSync(doc.out).size / 1024).toFixed(0);
+        console.log(`wrote ${path.relative(ROOT, doc.out)} (${kb} KB)`);
+    }
 } finally {
     await browser.close();
     server.close();

@@ -292,7 +292,9 @@
    same reason; the unnamed @page in InvestorLetter.css is the document
    default, which engines without named pages (Safari) fall back to. */
 @media print {
-    @page investor-announcement { size: A4; margin: 0.62in 0.72in 0.7in; }
+    /* 16mm sides: the body lines up with the running foot that
+       scripts/generate-letter-pdf.mjs draws at the same inset. */
+    @page investor-announcement { size: A4; margin: 0.62in 16mm 0.7in; }
     .announcement-page { page: investor-announcement; }
     :root:has(.announcement-page) { --brand-bg: #ffffff; }
     body:has(.announcement-page) :is(.disclaimer, .nav, .footer),
@@ -304,8 +306,8 @@
     .announcement-stage { gap: 0; padding: 0; }
     .announcement-paper { width: 100%; min-height: 0; margin: 0; padding: 0; overflow: visible; background: #ffffff !important; box-shadow: none; }
     .announcement-paper + .announcement-paper { break-before: page; }
-    .announcement-paper p { font-size: 10pt; line-height: 1.42; }
-    .announcement-document-section li { font-size: 10pt; }
+    .announcement-paper p { font-size: 9.5pt; line-height: 1.42; }
+    .announcement-document-section li { font-size: 9.5pt; }
     .announcement-document-section h3 { font-size: 10.5pt; }
     .announcement-paper > p,
     .announcement-document-section { break-inside: avoid; }

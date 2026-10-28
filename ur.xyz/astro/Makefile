@@ -27,13 +27,15 @@ generate-agent-assets:
 page-dates:
 	node scripts/page-dates.mjs build/$(or $(UR_ENV_DIR),main)
 
-# Reprint the investor letter to react/public/investors/*.pdf from the built
-# page (sync-public mirrors it into astro/public at build time), so the download
-# always matches the copy on the page. It is intentionally
+# Reprint an Investor Centre document to react/public/investors/*.pdf from its
+# built page (sync-public mirrors it into astro/public at build time), so the
+# download always matches the copy on the page. It is intentionally
 # not part of build-* because the generated PDF is a committed asset. Run it
-# whenever the letter copy or its print styles change, and commit the result.
+# whenever a document's copy or its print styles change, and commit the result:
+#   make letter-pdf                        (the Bittensor letter)
+#   make letter-pdf DOC=apex-competition   (any document, by slug; DOC=--all for every one)
 letter-pdf:
-	node ../scripts/generate-letter-pdf.mjs --rebuild
+	node ../scripts/generate-letter-pdf.mjs --rebuild $(or $(DOC),our-letter-to-bittensor)
 
 # Rasterise the investor deck PDF into react/public/investors/deck/*.webp (at
 # 2560 and 1280 px) and

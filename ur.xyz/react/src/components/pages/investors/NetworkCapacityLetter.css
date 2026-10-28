@@ -18,6 +18,9 @@
 
 @media print {
     .capacity-letter-diagram figcaption { display: none; }
+    /* A touch narrower than the column so the chart stays on page one with
+       the section it illustrates, as in the letter as published. */
+    .capacity-letter-diagram img { width: 90%; margin-inline: auto; }
     .announcement-paper--capacity .announcement-document-section { break-inside: auto; }
     .announcement-paper--capacity .announcement-document-section h3 { break-after: avoid; }
     .announcement-paper--capacity li { break-inside: avoid; }
