@@ -291,16 +291,6 @@
       ]
     },
     {
-      "id": "fp2-modern-provider-gate",
-      "date": "2026-11-04T00:00:00Z",
-      "status": "scheduled",
-      "key": true,
-      "approximate": false,
-      "title": "Modern provider gate turns on",
-      "detail": "Quality and Speed admit only providers verified as modern. The gate turns on automatically at 00:00 UTC, two weeks later than the October 21 first planned.",
-      "sources": []
-    },
-    {
       "id": "first-v2-close-and-commit",
       "date": "2026-11-06T18:25:00Z/2026-11-06T22:25:00Z",
       "status": "planned",
@@ -323,6 +313,16 @@
         { "label": "First v2 root finalized", "kind": "evm_tx", "ref": "" },
         { "label": "First v2 claim", "kind": "evm_tx", "ref": "" }
       ]
+    },
+    {
+      "id": "fp2-modern-provider-gate",
+      "date": "2026-11-11T00:00:00Z",
+      "status": "scheduled",
+      "key": true,
+      "approximate": false,
+      "title": "Modern provider gate turns on",
+      "detail": "Quality and Speed admit only providers verified as modern. The gate turns on automatically at 00:00 UTC, three weeks later than the October 21 first planned.",
+      "sources": []
     }
   ]
 }

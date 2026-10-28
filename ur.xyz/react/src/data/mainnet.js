@@ -70,7 +70,7 @@ export const SECONDS_PER_BLOCK = 12;
 
 // The box at the top of the page: what miners need to do now. Its dates are
 // the milestones' (tests/mainnet-timeline.test.mjs holds them together): the
-// modern provider gate at 00:00 UTC on November 4, and epoch 4, where
+// modern provider gate at 00:00 UTC on November 11, and epoch 4, where
 // settlement v2 is targeted to start, at about 18:25 UTC on October 30. A link goes only to a page the site has: the miner guide's install and
 // wallet sections, and the operators' apps on /operators.
 export const mainnetActions = {
@@ -78,8 +78,8 @@ export const mainnetActions = {
     title: 'What miners need to do',
     steps: [
         {
-            title: 'Install the new miner before November 4, 2026.',
-            detail: 'From 00:00 UTC on November 4, the old miner will be deprioritized.',
+            title: 'Install the new miner before November 11, 2026.',
+            detail: 'From 00:00 UTC on November 11, the old miner will be deprioritized.',
             link: { label: 'Miner guide: Install', href: '/docs/miner#1-install' },
         },
         {

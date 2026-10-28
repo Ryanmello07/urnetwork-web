@@ -247,9 +247,9 @@ test('the box at the top gives the timeline\'s dates, and links only pages the s
     assert.equal(mainnetActions.steps.length, 3);
     // the old miner is deprioritized when the modern provider gate turns on
     const gate = events.find((e) => e.id === 'fp2-modern-provider-gate');
-    assert.equal(gate.date, '2026-11-04T00:00:00Z');
-    assert.match(text(install), /November 4, 2026/);
-    assert.match(text(install), /From 00:00 UTC on November 4/);
+    assert.equal(gate.date, '2026-11-11T00:00:00Z');
+    assert.match(text(install), /November 11, 2026/);
+    assert.match(text(install), /From 00:00 UTC on November 11\b/);
     // epoch 3 stays on version 1; settlement v2 targets epoch 4, at about 18:25 on October 30
     const [, , , epoch3, epoch4] = mainnetEpochs;
     assert.equal(epoch3.settlement, 'v1');
