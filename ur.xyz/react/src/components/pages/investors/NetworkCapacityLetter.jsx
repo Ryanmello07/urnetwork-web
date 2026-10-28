@@ -21,14 +21,14 @@ export default function NetworkCapacityLetter() {
             </div>
 
             <header className="announcement-summary announcement-shell">
-                <p className="announcement-kicker"><span aria-hidden="true"></span>Tokenholder update</p>
+                <p className="announcement-kicker"><span aria-hidden="true"></span>{letter.category}</p>
                 <h1 className="announcement-summary-title--compact">{letter.title}</h1>
                 <div className="announcement-summary-meta">
                     <div className="announcement-issuer">
                         <span className="announcement-issuer__mark" aria-hidden="true">
                             <img src="/favicon.svg" alt="" />
                         </span>
-                        <span><strong>UR Foundation</strong><small>UR (SN25) · Network capacity update</small></span>
+                        <span><strong>UR Foundation</strong><small>UR (SN25)</small></span>
                     </div>
                     <p>
                         <span>{letter.dateIso ? <>Dated <time dateTime={letter.dateIso}>{letter.date}</time></> : letter.date}</span>

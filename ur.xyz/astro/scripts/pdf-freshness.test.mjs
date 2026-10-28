@@ -89,6 +89,12 @@ test('letter body changes remain tracked independently', () => fixture(({ root, 
   assert.ok(contentDay(root, 'letter.jsx') > contentDay(root, 'letter.pdf'));
 }));
 
+test('filing the letter under a category does not stale its PDF', () => fixture(({ root, write, commit }) => {
+  write(metadata().replace("    date:", "    category: 'Management Update',\n    date:"));
+  commit('2026-01-05');
+  assert.equal(contentDay(root, 'investors.js', investorLetterMetadata), '2026-01-01');
+}));
+
 test('missing letter metadata fails explicitly', () => {
   assert.throws(() => investorLetterMetadata('const deck = {};'), /metadata not found/);
 });

@@ -30,7 +30,7 @@ export default function TokenholderLetter() {
             <header className="announcement-summary announcement-shell">
                 <p className="announcement-kicker">
                     <span aria-hidden="true"></span>
-                    Tokenholder update
+                    {letter.category}
                 </p>
                 <h1 className="announcement-summary-title--compact">{letter.title}</h1>
                 <div className="announcement-summary-meta">
@@ -40,7 +40,7 @@ export default function TokenholderLetter() {
                         </span>
                         <span>
                             <strong>UR Foundation</strong>
-                            <small>UR (SN25) · Mainnet and product update</small>
+                            <small>UR (SN25)</small>
                         </span>
                     </div>
                     <p>

@@ -2,6 +2,7 @@ import React from 'react';
 import InvestorCentre from './investors/InvestorCentre';
 import DeckViewer from './investors/DeckViewer';
 import InvestorAnnouncement from './investors/InvestorAnnouncement';
+import ApexAnnouncement from './investors/ApexAnnouncement';
 import InvestorLetter from './investors/InvestorLetter';
 import TokenholderLetter from './investors/TokenholderLetter';
 import NetworkCapacityLetter from './investors/NetworkCapacityLetter';
@@ -18,6 +19,7 @@ import NetworkCapacityLetter from './investors/NetworkCapacityLetter';
 const DOCUMENTS = new Map([
     ['deck', DeckViewer],
     ['conviction-lock', InvestorAnnouncement],
+    ['apex-competition', ApexAnnouncement],
     ['our-letter-to-bittensor', InvestorLetter],
     ['letter-to-tokenholders-september-2026', TokenholderLetter],
     ['funding-network-capacity', NetworkCapacityLetter],

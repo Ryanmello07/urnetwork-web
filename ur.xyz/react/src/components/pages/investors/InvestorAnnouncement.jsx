@@ -29,7 +29,7 @@ export default function InvestorAnnouncement() {
             <header className="announcement-summary announcement-shell">
                 <p className="announcement-kicker">
                     <span aria-hidden="true"></span>
-                    Network announcement
+                    {announcement.category}
                 </p>
                 <h1>{announcement.headline}</h1>
                 <div className="announcement-summary-meta">
@@ -39,7 +39,7 @@ export default function InvestorAnnouncement() {
                         </span>
                         <span>
                             <strong>UR Foundation</strong>
-                            <small>UR (SN25) · Management update</small>
+                            <small>UR (SN25)</small>
                         </span>
                     </div>
                     <p>

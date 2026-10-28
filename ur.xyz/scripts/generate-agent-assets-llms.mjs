@@ -44,7 +44,7 @@ const SITE = 'https://ur.xyz';
 // not name follows, alphabetically, so a new page is never left out.
 const PAGE_ORDER = [
     '/', '/operators', '/miners', '/validators', '/research', '/research/2026-q3-report', '/build', '/reserve', '/mainnet',
-    '/investors', '/investors/funding-network-capacity', '/investors/letter-to-tokenholders-september-2026', '/investors/our-letter-to-bittensor', '/investors/conviction-lock', '/investors/deck',
+    '/investors', '/investors/apex-competition', '/investors/funding-network-capacity', '/investors/letter-to-tokenholders-september-2026', '/investors/our-letter-to-bittensor', '/investors/conviction-lock', '/investors/deck',
     '/about',
 ];
 const LEGAL = ['/terms', '/privacy', '/vdp'];

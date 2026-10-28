@@ -79,6 +79,8 @@ export default function InvestorCentre() {
                         <p className="resource-meta">
                             <time dateTime={featured.dateIso}>{featured.date}</time>
                             <span aria-hidden="true">·</span>
+                            {featured.category}
+                            <span aria-hidden="true">·</span>
                             {featured.kind}
                             <span aria-hidden="true">·</span>
                             {featured.readTime}
@@ -141,7 +143,7 @@ export default function InvestorCentre() {
                                 <time dateTime={item.dateIso || undefined}>{item.date}</time>
                                 <div className="archive-row__title">
                                     <a href={item.href}>{item.title}</a>
-                                    <small>{item.readTime || item.detail}</small>
+                                    <small>{[item.category, item.readTime || item.detail].filter(Boolean).join(' · ')}</small>
                                 </div>
                                 <div className="archive-row__format">
                                     {item.pdfHref

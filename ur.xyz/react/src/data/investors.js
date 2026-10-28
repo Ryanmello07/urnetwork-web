@@ -4,6 +4,12 @@
 // whose thin pages read it for their <head> and whose astro.config.mjs reads
 // it for the sitemap's per-document lastmod.
 
+// Every document carries one category from this list, shown on its card and
+// as its page's kicker, so new documents are filed rather than labelled ad hoc.
+// `kind` stays separate: it says what sort of document it is (a letter, an
+// announcement, a deck), not what it is about.
+export const CATEGORIES = ['Management Update', 'Network Update', 'Investor Materials'];
+
 // The investor deck. Slides and the PDF are both produced from the Google
 // Slides export by `make deck-slides`: images land in react/public/investors/
 // deck/ numbered 01..slideCount (mirrored into astro/public by `make
@@ -15,6 +21,7 @@
 // the date cannot drift apart between the featured card and the viewer.
 const deck = {
     kind: 'Deck',
+    category: 'Investor Materials',
     title: 'Introduction to UR (SN25)',
     summary:
         'How UR works, what is live today, the projects in research, and the opportunity for network operators to build on the subnet to compound demand.',
@@ -108,6 +115,7 @@ const deck = {
 
 const letter = {
     kind: 'Letter',
+    category: 'Management Update',
     title: 'Our Letter to Bittensor',
     summary:
         'A letter from Jack and Brien on launching UR (SN25), growing a global network of residential operators, and building a free and open internet together.',
@@ -122,6 +130,7 @@ const letter = {
 
 const convictionAnnouncement = {
     kind: 'Announcement',
+    category: 'Management Update',
     title: 'UR team locks 550,000 alpha in perpetuity',
     summary:
         'Approximately US$1.44 million locked in perpetual conviction, taking total locked alpha behind SN25 to 27.1 per cent of circulating supply.',
@@ -144,6 +153,7 @@ const convictionAnnouncement = {
 // PDF is the letter as sent; the page reproduces it.
 const tokenholderLetter = {
     kind: 'Announcement',
+    category: 'Management Update',
     title: 'September Letter to Tokenholders',
     summary:
         'Brien and Jack outline preparations for UR\'s mainnet launch, the next phase of SN25, Project Meridian, and the mission to make privacy an expected property of the internet.',
@@ -158,6 +168,7 @@ const tokenholderLetter = {
 // Local draft: sign-off awaits confirmation.
 const capacityLetter = {
     kind: 'Letter',
+    category: 'Network Update',
     title: "UR's Operator Ecosystem",
     headline: 'Funding network capacity for UR’s operator ecosystem',
     summary:
@@ -170,9 +181,29 @@ const capacityLetter = {
     pdfHref: '/investors/ur-network-capacity-letter.pdf',
 };
 
+// The Apex (SN1) competition announcement.
+const apexAnnouncement = {
+    kind: 'Announcement',
+    category: 'Network Update',
+    // The card's short title; the page's <h1>, <title> and structured data
+    // use `headline`.
+    title: 'UR x Apex routing competition',
+    headline: 'UR (SN25) launches open competition on Apex (SN1)',
+    summary:
+        'An open competition on Apex (SN1), operated by Macrocosmos, to improve the routing and provider-matching algorithms behind the UR network.',
+    description:
+        'UR (SN25) opens its routing and provider-matching problem to the Bittensor research community through an open competition on Apex (SN1), operated by Macrocosmos.',
+    date: '28 October 2026',
+    dateIso: '2026-10-28',
+    readTime: '4 min read',
+    cta: 'Read the announcement',
+    href: '/investors/apex-competition',
+    pdfHref: '/investors/ur-apex-competition-announcement.pdf',
+};
+
 export const investorCentre = {
-    updated: '15 October 2026',
-    updatedIso: '2026-10-15',
+    updated: '28 October 2026',
+    updatedIso: '2026-10-28',
     about: [
         'Our mission is to make privacy the default for every user by providing the encryption layer for the open internet. We are building a user-powered network and a privacy product suite designed to serve people, not surveil them.',
         'Anyone, anywhere should be able to access the internet freely and privately.',
@@ -182,20 +213,34 @@ export const investorCentre = {
     // a page that reads `featured` gets retitled and re-pointed the next time
     // the card changes, which is how the letter page briefly offered the deck
     // PDF as its own download.
-    featured: capacityLetter,
+    featured: apexAnnouncement,
     deck,
     letter,
     convictionAnnouncement,
     tokenholderLetter,
     capacityLetter,
+    apexAnnouncement,
 
     updates: [
+        {
+            title: apexAnnouncement.title,
+            date: apexAnnouncement.date,
+            dateIso: apexAnnouncement.dateIso,
+            kind: apexAnnouncement.kind,
+            category: apexAnnouncement.category,
+            format: 'Written',
+            readTime: apexAnnouncement.readTime,
+            href: apexAnnouncement.href,
+            pdfHref: apexAnnouncement.pdfHref,
+            external: false,
+        },
         {
             title: capacityLetter.title,
             draft: !capacityLetter.dateIso,
             date: capacityLetter.date,
             dateIso: capacityLetter.dateIso,
             kind: capacityLetter.kind,
+            category: capacityLetter.category,
             format: 'Written',
             readTime: capacityLetter.readTime,
             href: capacityLetter.href,
@@ -207,6 +252,7 @@ export const investorCentre = {
             date: tokenholderLetter.date,
             dateIso: tokenholderLetter.dateIso,
             kind: tokenholderLetter.kind,
+            category: tokenholderLetter.category,
             format: 'Written',
             readTime: tokenholderLetter.readTime,
             href: tokenholderLetter.href,
@@ -218,6 +264,7 @@ export const investorCentre = {
             date: convictionAnnouncement.date,
             dateIso: convictionAnnouncement.dateIso,
             kind: convictionAnnouncement.kind,
+            category: convictionAnnouncement.category,
             format: 'Written',
             readTime: convictionAnnouncement.readTime,
             href: convictionAnnouncement.href,
@@ -229,6 +276,7 @@ export const investorCentre = {
             date: letter.date,
             dateIso: letter.dateIso,
             kind: letter.kind,
+            category: letter.category,
             format: 'Written',
             readTime: letter.readTime,
             href: letter.href,
@@ -239,6 +287,7 @@ export const investorCentre = {
     materials: [
         {
             title: deck.title,
+            category: deck.category,
             detail: null,
             readTime: deck.readTime,
             href: deck.href,
@@ -246,6 +295,7 @@ export const investorCentre = {
         },
         {
             title: 'UR Litepaper',
+            category: 'Investor Materials',
             detail: null,
             readTime: '12 min read',
             date: '18 August 2026',

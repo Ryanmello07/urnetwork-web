@@ -2,10 +2,14 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
+// Fields that only file the letter in the Investor Centre and never reach the
+// printed PDF; changing them must not demand a reprint.
+const UNPRINTED_FIELDS = /^\s*category: .*\n/gm;
+
 export function investorLetterMetadata(source) {
   const match = source.replace(/\r\n/g, '\n').match(/^const letter = \{[\s\S]*?^\};/m);
   if (!match) throw new Error('August letter metadata not found in the investor registry');
-  return match[0];
+  return match[0].replace(UNPRINTED_FIELDS, '');
 }
 
 // A selector dates one document within a shared file. Walk its history until
