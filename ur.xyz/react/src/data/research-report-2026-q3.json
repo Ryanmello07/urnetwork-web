@@ -1593,7 +1593,7 @@
       "axis": "Recoveries",
       "figure": "8",
       "what": "stalls and failures fixed, from H1 handoff drops in August to pages over 5 s in the 100-page test in October",
-      "confidence": "Each is a functional recovery in its own named workload. None is a speed multiplier. (This card is proposed in D1; the report has no such row.)",
+      "confidence": "Each is a functional recovery in its own named workload. None is a speed multiplier.",
       "proposed": true,
       "report": null
     },
