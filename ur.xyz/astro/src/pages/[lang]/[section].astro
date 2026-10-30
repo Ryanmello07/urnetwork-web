@@ -6,6 +6,7 @@ import Section from '../../components/Section.astro';
 import CardGrid from '../../components/CardGrid.astro';
 import FooterStatic from '../../components/FooterStatic.astro';
 import NetworkDiagram, { diagramCopy } from '@react/components/NetworkDiagram.jsx';
+import OperatorLogos from '@react/components/OperatorLogos.jsx';
 import MinerSim from '@react/components/MinerSim.jsx';
 import MinerGlobeIntro from '@react/components/MinerGlobeIntro.jsx';
 import ValidatorSim from '@react/components/ValidatorSim.jsx';
@@ -66,7 +67,12 @@ const jsonLd = section === 'research'
                 {section === 'research' && <ResearchReportCard t={t} />}
                 {section === 'miners' && <p>{sectionData.both}</p>}
                 {section === 'miners' && <p>{sectionData.goal}</p>}
-                {showDiagram && <NetworkDiagram client:visible={{rootMargin: "200px"}} active={section} lang={lang} ctaLabel={sectionData.cta} copy={diagramCopy(t)} />}
+                {showDiagram && section === 'operators' && (
+                    <NetworkDiagram client:visible={{rootMargin: "200px"}} active={section} lang={lang} ctaLabel={sectionData.cta} copy={diagramCopy(t)}>
+                        <OperatorLogos title={sectionData.directoryTitle} />
+                    </NetworkDiagram>
+                )}
+                {showDiagram && section !== 'operators' && <NetworkDiagram client:visible={{rootMargin: "200px"}} active={section} lang={lang} ctaLabel={sectionData.cta} copy={diagramCopy(t)} />}
                 {section === 'research'
                     ? <ResearchAreas t={t} />
                     : <CardGrid items={items} />}

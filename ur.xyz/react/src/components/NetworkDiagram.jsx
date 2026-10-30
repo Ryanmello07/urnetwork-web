@@ -85,7 +85,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const lerpAngle = (a0, a1, t) => { const d = Math.atan2(Math.sin(a1 - a0), Math.cos(a1 - a0)); return a0 + d * t; };
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabel = null, copy = null }) {
+export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabel = null, copy = null, children }) {
     const { t } = useLanguage();
     const words = copy || diagramCopy(t);
     const label = words.labels;
@@ -96,6 +96,7 @@ export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabe
     const hitRefs = useRef({});
     const labelRefs = useRef({});
     const edgeRefs = useRef({});
+    const slotRef = useRef(null);
 
     useEffect(() => {
         const holder = holderRef.current;
@@ -143,7 +144,9 @@ export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabe
 
             // --- external morph: slide/shrink into the left column, driven by eased p ---
             const cta = ctaRef.current;
+            const slot = slotRef.current;
             if (!canDock) {
+                if (slot) { slot.classList.remove('is-overlay'); slot.style.opacity = ''; slot.removeAttribute('inert'); }
                 holder.classList.remove('is-interactive');
                 holder.style.height = '';
                 svg.style.transform = '';
@@ -156,7 +159,13 @@ export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabe
                 holder.classList.add('is-interactive');
                 const inlineX = rect.left + (rect.width - NAT_W) / 2; // centered in the content column
                 const dockX = colX + (startCol - DOCKED_W) / 2;      // centered in the start column
-                const dockY = NAV_H + DOCK_VFRAC * (vh - NAV_H) - DOCKED_H / 2; // 0.25 of the nav→bottom span
+                // 0.25 of the nav→bottom span, but never below the end of its
+                // section: past that the docked stack scrolls away with the
+                // section instead of sitting on the footer
+                const stackH = DOCKED_H + (cta ? 18 + cta.offsetHeight : 0);
+                const section = holder.closest('section');
+                const floor = section ? section.getBoundingClientRect().bottom - stackH - 24 : Infinity;
+                const dockY = Math.min(NAV_H + DOCK_VFRAC * (vh - NAV_H) - DOCKED_H / 2, floor);
                 svg.style.width = NAT_W + 'px';
                 svg.style.transform =
                     `translate3d(${lerp(inlineX, dockX, p).toFixed(1)}px, ${lerp(rect.top, dockY, p).toFixed(1)}px, 0) scale(${lerp(1, DOCK_SCALE, p).toFixed(3)})`;
@@ -164,6 +173,12 @@ export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabe
                 // docked in the margin, so the content column holds the same
                 // vertical spacing and never lurches upward as it slides out.
                 holder.style.height = NAT_H + 'px';
+                // the slot fills that reserved footprint once the diagram has left it
+                if (slot) {
+                    slot.classList.add('is-overlay');
+                    slot.style.opacity = p.toFixed(3);
+                    if (p > 0.5) slot.removeAttribute('inert'); else slot.setAttribute('inert', '');
+                }
                 // The role CTA parks in the start margin where the square will
                 // dock, then yields downward beneath it as it arrives.
                 if (cta) {
@@ -306,6 +321,8 @@ export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabe
                     {ctaLabel}
                 </a>
             )}
+
+            {children && <div className="nd-slot" ref={slotRef}>{children}</div>}
         </div>
     );
 }
