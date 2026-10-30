@@ -62,7 +62,7 @@ const jsonLd = section === 'research'
                 {section === 'miners' && <p>{sectionData.both}</p>}
                 {section === 'miners' && <p>{sectionData.goal}</p>}
                 {showDiagram && section === 'operators' && (
-                    <NetworkDiagram client:visible={{rootMargin: "200px"}} active={section} lang="en" ctaLabel={sectionData.cta} copy={diagramCopy(t)}>
+                    <NetworkDiagram client:visible={{rootMargin: "200px"}} active={section} lang="en" ctaLabel={sectionData.cta} copy={diagramCopy(t)} docked>
                         <OperatorLogos title={sectionData.directoryTitle} />
                     </NetworkDiagram>
                 )}

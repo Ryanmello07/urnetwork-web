@@ -85,7 +85,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const lerpAngle = (a0, a1, t) => { const d = Math.atan2(Math.sin(a1 - a0), Math.cos(a1 - a0)); return a0 + d * t; };
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabel = null, copy = null, children }) {
+export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabel = null, copy = null, children, docked = false }) {
     const { t } = useLanguage();
     const words = copy || diagramCopy(t);
     const label = words.labels;
@@ -120,6 +120,7 @@ export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabe
         // Binary, self-easing dock: scroll only flips `target` (at THRESHOLD, either
         // direction); `p` then eases the whole way to it, so it never hovers mid-morph.
         let p = 0, target = 0, animFrom = 0, animStart = t0;
+        let first = true;
 
         const frame = () => {
             raf = 0;
@@ -138,7 +139,11 @@ export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabe
 
             // Commit to docked/inline once raw scroll progress crosses THRESHOLD, then ease.
             const rawP = Math.max(0, Math.min(1, ((NAV_H + GAP + TRAVEL) - rect.top) / TRAVEL));
-            const newTarget = (canDock && rawP >= THRESHOLD) ? 1 : 0;
+            // `docked`: the page's content fills the footprint from the start,
+            // so the diagram begins in the margin instead of arriving there
+            const newTarget = (canDock && (docked || rawP >= THRESHOLD)) ? 1 : 0;
+            if (docked && first) { p = newTarget; animFrom = newTarget; target = newTarget; }
+            first = false;
             if (newTarget !== target) { animFrom = p; animStart = now; target = newTarget; }
             p = reduce ? target : animFrom + (target - animFrom) * easeInOut(Math.min(1, (now - animStart) / DOCK_DURATION));
 
@@ -249,7 +254,7 @@ export default function NetworkDiagram({ active = 'subnet', lang = 'en', ctaLabe
             window.removeEventListener('resize', kick);
             document.removeEventListener('visibilitychange', onVis);
         };
-    }, [active]);
+    }, [active, docked]);
 
     const hrefFor = (key) => {
         const route = ROUTE[key];

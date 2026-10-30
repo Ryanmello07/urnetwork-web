@@ -12,7 +12,7 @@ export default function Operators() {
     return (
         <Section id="operators" eyebrow={s.eyebrow} title={s.title} headingLevel="h1">
             <p>{s.intro}</p>
-            <NetworkDiagram active="operators" lang={code} ctaLabel={s.cta}>
+            <NetworkDiagram active="operators" lang={code} ctaLabel={s.cta} docked>
                 <OperatorLogos title={s.directoryTitle} />
             </NetworkDiagram>
             <div className="card-grid">
