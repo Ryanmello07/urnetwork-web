@@ -66,6 +66,13 @@ export const PAGE_ROUTES = ['about', 'investors', 'build', 'reserve', 'mainnet']
  */
 export const RESEARCH_REPORT_SLUGS = ['2026-q3-report'];
 
+/**
+ * The research methodology (/research/methodology): how the research works,
+ * English-only like the reports, under the translated research section. Its
+ * route name is 'research-methodology'.
+ */
+export const RESEARCH_METHODOLOGY_PATH = '/research/methodology';
+
 const SECTION_SET = new Set(SECTION_ROUTES);
 const LEGAL_SET = new Set(LEGAL_ROUTES);
 const PAGE_SET = new Set(PAGE_ROUTES);
@@ -85,6 +92,7 @@ export function parseRoute(pathname) {
     // Strip leading slash and trailing slash for matching.
     const bare = rest.replace(/^\//, '').replace(/\/$/, '');
     if (SECTION_SET.has(bare)) return { name: bare, slug: null };
+    if (`/${bare}` === RESEARCH_METHODOLOGY_PATH) return { name: 'research-methodology', slug: null };
     if (bare.startsWith('research/') && REPORT_SET.has(bare.slice('research/'.length))) {
         return { name: 'research-report', slug: bare.slice('research/'.length) };
     }
@@ -116,6 +124,7 @@ export function buildPath(route, lang) {
     if (!route || route.name === 'home') return prefix || '/';
     if (SECTION_SET.has(route.name)) return `${prefix}/${route.name}`;
     if (route.name === 'research-report') return `/research/${route.slug}`;
+    if (route.name === 'research-methodology') return RESEARCH_METHODOLOGY_PATH;
     if (route.name === 'docs') {
         return route.slug ? `/docs/${route.slug}` : '/docs';
     }

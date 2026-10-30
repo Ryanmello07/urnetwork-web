@@ -135,8 +135,8 @@ export default function Nav({ disclaimerVisible, activeRoute, aboutHref }) {
     const { code, setLang, langs, t } = useLanguage();
     const detectedRoute = useRoute();
     const route = activeRoute ? { name: activeRoute, slug: null } : detectedRoute;
-    // a research report is a page of the research section: the link shows it
-    const inResearch = route.name === 'research' || route.name === 'research-report';
+    // a research report or the methodology is a page of the research section: the link shows it
+    const inResearch = route.name === 'research' || route.name === 'research-report' || route.name === 'research-methodology';
     const resolvedAboutHref = aboutHref ?? (code === 'en' ? '/about' : null);
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);

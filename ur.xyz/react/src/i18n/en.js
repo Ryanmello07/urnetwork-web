@@ -273,6 +273,18 @@ operators: {
             body: 'The research aims to give everyone the best encryption and the best speed, for everyday use, that makes your internet better. The report follows 39 measured changes toward that on one timeline, how far each kind of gain went, and how the research was done.',
             cta: 'Read the report'
         },
+        methodology: {
+            tag: 'Methodology',
+            topic: 'Three research loops',
+            title: 'Self-improving research loops',
+            body: 'How the lab, the open competition and the volunteer field nodes each improve the network, and improve how the next round is measured. All three share one discipline: a frozen baseline, measured noise, and every attempt on the record.',
+            cta: 'Read the methodology',
+            loops: [
+                { name: 'Lab', detail: 'PERFVAR · every change' },
+                { name: 'Competition', detail: 'Apex SN1 · weekly' },
+                { name: 'Field', detail: 'Friends · quarterly' }
+            ]
+        },
         // the algorithm areas: each renders as an expandable block (closed: tag,
         // title, body; open: approach, links, directions). The anchor ids are in
         // components/research-areas.js, keyed by tag.

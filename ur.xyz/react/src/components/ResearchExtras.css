@@ -753,6 +753,94 @@
     color: var(--brand-ur);
 }
 
-.research-report-card:hover .research-report-card-cta {
+.research-report-card:hover .research-report-card-cta,
+.research-method-card:hover .research-report-card-cta {
     color: var(--brand-white);
+}
+
+/* --- The research methodology's card (ResearchMethodologyCard), right under
+       the report's: the three research loops' rings as its hero
+       (ResearchLoops.css), then the link, set in the report card's type. A
+       quiet edge, so the report stays the page's pink lead item and the rings
+       carry the colour. --- */
+.research-report-card + .research-method-card { margin-top: -16px; }
+.research-method-card {
+    display: block;
+    margin: 0 0 40px;
+    border: 1px solid rgba(214, 230, 244, 0.14);
+    background: rgba(214, 230, 244, 0.02);
+    color: inherit;
+    text-decoration: none;
+    overflow: hidden;
+    transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.research-method-card:hover,
+.research-method-card:focus-visible {
+    border-color: rgba(214, 230, 244, 0.34);
+    background: rgba(214, 230, 244, 0.035);
+}
+
+.research-method-card:focus-visible {
+    outline: 2px solid var(--brand-ur);
+    outline-offset: 3px;
+}
+
+.research-method-card-hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    padding: 30px 24px;
+    background: #15181d;
+    border-bottom: 1px solid rgba(214, 230, 244, 0.07);
+}
+
+.research-method-card-hero .research-loops {
+    flex: none;
+    width: 176px;
+}
+
+.research-method-card-hero .research-loops-key {
+    width: 270px;
+}
+
+.research-method-card-text {
+    padding: 22px 24px 22px;
+}
+
+/* a phone: the rings and the key side by side, the key's detail under each name;
+   the text keeps the report card's inset, so the two cards' text lines up */
+@media (max-width: 599px) {
+    .research-method-card-hero {
+        justify-content: flex-start;
+        gap: 20px;
+        padding: 20px 24px;
+    }
+
+    .research-method-card-hero .research-loops {
+        width: 104px;
+    }
+
+    .research-method-card-hero .research-loops-key {
+        width: auto;
+        min-width: 0;
+        gap: 8px;
+    }
+
+    .research-method-card-hero .research-loops-key li {
+        grid-template-columns: 8px minmax(0, 1fr);
+        row-gap: 0;
+        font-size: 0.8rem;
+    }
+
+    .research-method-card-hero .research-loops-key li::before {
+        width: 8px;
+        height: 8px;
+    }
+
+    .research-method-card-hero .research-loops-key li span {
+        grid-column: 2;
+    }
+
 }

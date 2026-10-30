@@ -14,3 +14,5 @@ web/web
 ur.xyz/astro/.astro/dev.json
 ur.xyz/astro/.astro/dev.log
 ur.xyz/astro/.astro/settings.json
+ur.xyz/astro/.astro/preview.json
+ur.xyz/astro/.astro/preview.log

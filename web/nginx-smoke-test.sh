@@ -171,6 +171,8 @@ expect_response ur.xyz /reserve 200
 expect_response ur.xyz /mainnet 200
 expect_response ur.xyz /research/2026-q3-report 200
 expect_response ur.xyz /de/research/2026-q3-report 301 /research/2026-q3-report
+expect_response ur.xyz /research/methodology 200
+expect_response ur.xyz /de/research/methodology 301 /research/methodology
 expect_operator_list
 expect_response www.ur.xyz / 301 https://ur.xyz/
 
