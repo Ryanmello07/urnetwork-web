@@ -1,7 +1,7 @@
 import React from 'react';
 import Section from '../Section';
 import { useLanguage } from '../../i18n';
-import { ResearchCompetition, ResearchReportCard, ResearchAreas, ResearchNotes, ResearchFoot } from '../ResearchExtras';
+import { ResearchCompetition, ResearchReportCard, ResearchMethodologyCard, ResearchAreas, ResearchNotes, ResearchFoot } from '../ResearchExtras';
 
 export default function Research() {
     const { t } = useLanguage();
@@ -10,6 +10,7 @@ export default function Research() {
             <ResearchCompetition t={t} />
             <p>{t.research.intro}</p>
             <ResearchReportCard t={t} />
+            <ResearchMethodologyCard t={t} />
             <ResearchAreas t={t} />
             <ResearchNotes t={t} />
             <ResearchFoot t={t} />

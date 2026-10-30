@@ -86,6 +86,7 @@ gates: install-playwright-browser
 	node --test ../react/tests/mainnet-timeline.test.mjs
 	node --test ../react/tests/mainnet-summary.test.mjs
 	node --test ../react/tests/research-report.test.mjs
+	node --test ../react/tests/research-methodology.test.mjs
 	node --test ../react/tests/epoch.test.mjs
 	node --test ../react/tests/code-marks.test.mjs
 	node --test ../react/tests/docs-search.test.mjs

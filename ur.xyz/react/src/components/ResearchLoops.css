@@ -1,0 +1,63 @@
+/* ResearchLoops.css — the three research loops' rings and their key
+ * (ResearchLoops.jsx), shared by the methodology's card on /research and
+ * /research/methodology. The site bundles every component's CSS into one
+ * sheet, so everything here is scoped under .research-loops, .rl-* or
+ * .research-loops-key, and the keyframes carry the component's name.
+ *
+ * The loops' colours are the abstract's: the lab green and the competition
+ * pink are the brand's (App.css); the field blue is the abstract's own. */
+
+/* each loop's colour, set by its class wherever the loop is drawn or named
+   (the rings, their key, and the methodology page's index and sections) */
+.rl-lab { --rl-c: var(--brand-usd); }
+.rl-competition { --rl-c: var(--brand-ur); }
+.rl-field { --rl-c: #38b0ff; }
+
+.research-loops { display: block; width: 100%; height: auto; overflow: visible; }
+.research-loops .rl-ring { fill: none; stroke: rgba(214, 230, 244, 0.15); stroke-width: 1.2; }
+.research-loops .rl-trail { fill: none; stroke: var(--rl-c); stroke-opacity: 0.5; stroke-width: 3; stroke-linecap: round; }
+.research-loops .rl-dot { fill: var(--rl-c); }
+.research-loops .rl-core { fill: var(--brand-white); }
+
+/* each loop turns once around its ring, from where the abstract draws it */
+.research-loops .rl-orbit {
+    transform-box: view-box;
+    transform-origin: 120px 120px;
+    transform: rotate(var(--rl-a0));
+    animation: research-loops-orbit var(--rl-t) linear infinite;
+}
+.research-loops .rl-lab { --rl-a0: -35deg; --rl-t: 10s; }
+.research-loops .rl-competition { --rl-a0: -150deg; --rl-t: 30s; }
+.research-loops .rl-field { --rl-a0: -265deg; --rl-t: 90s; }
+@keyframes research-loops-orbit {
+    from { transform: rotate(var(--rl-a0)); }
+    to { transform: rotate(calc(var(--rl-a0) - 360deg)); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .research-loops .rl-orbit { animation: none; }
+}
+
+/* a mark: drawn small beside a loop's section, that loop alone lit */
+.research-loops.is-mark .rl-ring { stroke: rgba(214, 230, 244, 0.2); stroke-width: 7; }
+.research-loops.is-mark .rl-trail { stroke-width: 14; }
+
+/* the key: each loop's dot, its name, and its instrument and cadence */
+.research-loops-key { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.research-loops-key li {
+    display: grid;
+    grid-template-columns: 10px auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: 10px;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    color: rgba(214, 230, 244, 0.66);
+}
+.research-loops-key li::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--rl-c);
+    transform: translateY(1px);
+}
+.research-loops-key b { font-weight: 400; color: var(--brand-white); }

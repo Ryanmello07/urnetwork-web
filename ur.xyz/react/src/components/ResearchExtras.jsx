@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './ResearchExtras.css';
 import { openResearchArea, researchAreaId } from './research-areas.js';
 import { APEX_COMPETITION, competitionPhase, countdown } from './research-competition.js';
+import ResearchLoops, { ResearchLoopsKey } from './ResearchLoops';
 
 /**
  * Research page extras — the algo-competition card, the algorithm areas,
@@ -252,6 +253,39 @@ export function ResearchReportCard({ t }) {
             <h2 className="research-report-card-title">{r.title}</h2>
             <p className="research-report-card-body">{r.body}</p>
             <span className="research-report-card-cta">{r.cta} <span aria-hidden="true">→</span></span>
+        </a>
+    );
+}
+
+/**
+ * The research methodology's card, under the report's: the three research
+ * loops' rings as its hero (ResearchLoops.jsx, turning in CSS), then a link to
+ * /research/methodology, where the same rings head the page. The methodology
+ * is English-only, so the card links the English page from every language,
+ * and the translations' call to action says so, as the report card's does.
+ * The rings and their key repeat what the text says, so they are hidden from
+ * assistive technology here; the page labels its drawing.
+ */
+export const RESEARCH_METHODOLOGY_HREF = '/research/methodology';
+
+// the dictionaries name the loops innermost first; each takes its ring's colour
+const METHOD_LOOP_KEYS = ['lab', 'competition', 'field'];
+
+export function ResearchMethodologyCard({ t }) {
+    const m = t.research.methodology;
+    const loops = m.loops.map((l, i) => ({ ...l, key: METHOD_LOOP_KEYS[i] }));
+    return (
+        <a className="research-method-card" href={RESEARCH_METHODOLOGY_HREF}>
+            <div className="research-method-card-hero">
+                <ResearchLoops />
+                <ResearchLoopsKey loops={loops} hidden />
+            </div>
+            <div className="research-method-card-text">
+                <span className="research-report-card-tag">{m.tag} · {m.topic}</span>
+                <h2 className="research-report-card-title">{m.title}</h2>
+                <p className="research-report-card-body">{m.body}</p>
+                <span className="research-report-card-cta">{m.cta} <span aria-hidden="true">→</span></span>
+            </div>
         </a>
     );
 }

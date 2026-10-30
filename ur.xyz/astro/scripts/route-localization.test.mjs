@@ -19,7 +19,7 @@ const TRANSLATED = ['/', '/operators', '/miners', '/validators', '/research'];
 const ENGLISH_ONLY = [
     '/terms', '/privacy', '/vdp',
     '/about', '/build', '/reserve', '/mainnet', '/docs', '/docs/litepaper', '/investors', '/investors/deck', '/investors/letter-to-tokenholders-september-2026',
-    '/research/2026-q3-report',
+    '/research/2026-q3-report', '/research/methodology',
     '/audits/report.pdf', '/future-page',
 ];
 

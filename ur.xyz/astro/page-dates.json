@@ -22,8 +22,8 @@
       "lastmod": "2026-10-14"
     },
     "/ar/research": {
-      "fingerprint": "dea51c9b75fe3a24",
-      "lastmod": "2026-10-26"
+      "fingerprint": "71cc09faaa712341",
+      "lastmod": "2026-10-30"
     },
     "/ar/validators": {
       "fingerprint": "307cc71152692456",
@@ -50,8 +50,8 @@
       "lastmod": "2026-10-14"
     },
     "/de/research": {
-      "fingerprint": "993a1a39a61f0e8b",
-      "lastmod": "2026-10-26"
+      "fingerprint": "9ba268a7d2dbbcc0",
+      "lastmod": "2026-10-30"
     },
     "/de/validators": {
       "fingerprint": "7affbf410116fb54",
@@ -118,8 +118,8 @@
       "lastmod": "2026-10-14"
     },
     "/es/research": {
-      "fingerprint": "67b32a1edc1c656e",
-      "lastmod": "2026-10-26"
+      "fingerprint": "7529d7b53e1b81d8",
+      "lastmod": "2026-10-30"
     },
     "/es/validators": {
       "fingerprint": "b19a149314e5bbd7",
@@ -174,11 +174,15 @@
       "lastmod": "2026-09-25"
     },
     "/research": {
-      "fingerprint": "6527c3319e3c4bef",
-      "lastmod": "2026-10-26"
+      "fingerprint": "abb87d955a44e9f6",
+      "lastmod": "2026-10-30"
     },
     "/research/2026-q3-report": {
       "fingerprint": "e619f695f1f9b1eb",
+      "lastmod": "2026-10-30"
+    },
+    "/research/methodology": {
+      "fingerprint": "2659f507139d5868",
       "lastmod": "2026-10-30"
     },
     "/reserve": {
@@ -198,8 +202,8 @@
       "lastmod": "2026-10-14"
     },
     "/ru/research": {
-      "fingerprint": "67cf953712ba501c",
-      "lastmod": "2026-10-26"
+      "fingerprint": "9394d22bb5d15dbf",
+      "lastmod": "2026-10-30"
     },
     "/ru/validators": {
       "fingerprint": "27a02f30eaf105ca",
@@ -230,8 +234,8 @@
       "lastmod": "2026-10-14"
     },
     "/zh/research": {
-      "fingerprint": "f2fb33c10b643f3c",
-      "lastmod": "2026-10-26"
+      "fingerprint": "9abe8c3d9d1f9f7b",
+      "lastmod": "2026-10-30"
     },
     "/zh/validators": {
       "fingerprint": "beb18ab2dde5e282",
