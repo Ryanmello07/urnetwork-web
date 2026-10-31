@@ -1,0 +1,31 @@
+.operator-logos { display: flex; flex-direction: column; gap: 20px; }
+.operator-logos-title {
+    color: var(--brand-ur, #ED8FFF);
+    font-family: 'PPNeueBit', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.operator-logos-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.operator-logos-list a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 112px;
+    padding: 0 28px;
+    border: 1px solid rgba(214, 230, 244, 0.14);
+    background: rgba(214, 230, 244, 0.02);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+.operator-logos-list a:hover { border-color: rgba(237, 143, 255, 0.55); background: rgba(237, 143, 255, 0.04); }
+.operator-logos-list a:focus-visible { outline: 2px solid var(--brand-ur, #ED8FFF); outline-offset: 2px; }
+/* every mark drawn in one tone: the operators' own colours vary */
+.operator-logos-list img { display: block; width: auto; max-width: 100%; height: 26px; filter: brightness(0) invert(1); opacity: 0.82; transition: opacity 0.2s ease; }
+.operator-logos-list a:hover img { opacity: 1; }

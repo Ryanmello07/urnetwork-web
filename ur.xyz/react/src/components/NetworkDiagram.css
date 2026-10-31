@@ -95,3 +95,16 @@
     white-space: nowrap;
     will-change: transform;
 }
+
+/* --- Slot: page content shown in the diagram's reserved footprint ---
+   Static (mobile / no-JS): in flow under the CTA. Interactive: laid over the
+   footprint the docked diagram leaves behind, faded in by the frame loop. */
+.nd-slot { margin: 0 0 44px; }
+.nd-slot.is-overlay {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

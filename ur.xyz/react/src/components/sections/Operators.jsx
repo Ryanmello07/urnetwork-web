@@ -2,6 +2,7 @@ import React from 'react';
 import Section from '../Section';
 import NetworkDiagram from '../NetworkDiagram';
 import OperatorsDirectory from '../OperatorsDirectory';
+import OperatorLogos from '../OperatorLogos';
 import { useLanguage } from '../../i18n';
 import { EXTERNAL, isExternal } from '../../lib/links';
 
@@ -11,7 +12,9 @@ export default function Operators() {
     return (
         <Section id="operators" eyebrow={s.eyebrow} title={s.title} headingLevel="h1">
             <p>{s.intro}</p>
-            <NetworkDiagram active="operators" lang={code} ctaLabel={s.cta} />
+            <NetworkDiagram active="operators" lang={code} ctaLabel={s.cta} docked>
+                <OperatorLogos title={s.directoryTitle} />
+            </NetworkDiagram>
             <div className="card-grid">
                 {s.roles.map(r => (
                     <div className="card" key={r.tag}>
